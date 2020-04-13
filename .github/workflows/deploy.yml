@@ -22,12 +22,9 @@ jobs:
     - run: make
     - run: make source-package
     - name: Deploy to Staging server
-      uses: easingthemes/ssh-deploy@v2.0.7
+      uses: Pendect/action-rsyncer@v1.1.0
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-        SOURCE: "source_package/jitsi-meet"
-        REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
-        REMOTE_USER: ${{ secrets.DEPLOY_USER }}
-        TARGET: ${{ secrets.DEPLOY_TARGET }}
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v2
+        DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+      with:
+        src: 'source_package/jitsi-meet/'
+        dest: ${{ secrets.DEPLOY_DEST }}
