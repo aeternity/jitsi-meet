@@ -21,8 +21,6 @@ jobs:
     - run: npm run lint
     - run: make
     - run: make source-package
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v2
     - name: Deploy to Staging server
       uses: easingthemes/ssh-deploy@v2.0.7
       env:
@@ -31,3 +29,5 @@ jobs:
         REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
         REMOTE_USER: ${{ secrets.DEPLOY_USER }}
         TARGET: ${{ secrets.DEPLOY_TARGET }}
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v2
