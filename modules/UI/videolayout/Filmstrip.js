@@ -59,7 +59,7 @@ const Filmstrip = {
             const $thumb = $(videoThumb);
 
             // Smaller video
-            if (!$thumb.hasClass('without-camera')) {
+            if ($thumb.hasClass('with-camera')) {
                 $thumb.css(bigVideoCSS);
 
                 return;
