@@ -164,7 +164,11 @@ class Chat extends AbstractChat<Props> {
             ? null
             : (
                 <>
-                    { this._renderChatHeader() }
+                    {/*
+                         TODO:
+                          !interface_config.ALWAYS_OPEN_CHAT &&
+                           this._renderChatHeader()
+                    */}
                     { _showNamePrompt
                         ? <DisplayNameForm /> : this._renderChat() }
                 </>

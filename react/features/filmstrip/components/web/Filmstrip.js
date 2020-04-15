@@ -195,7 +195,19 @@ class Filmstrip extends Component <Props> {
                 remoteVideoContainerClassName += ' has-overflow';
             }
 
+            // TODO: wrap all in
+            //  if(interface_config.ALWAYS_SHOW_TILEVIEW)
+            // The width of the chat overlay (for now constant 375px)
+            // On the initial mount it may be null
+            const chatNode = document.getElementById('sideToolbarContainer')
+            const chatWidth = chatNode
+                ? chatNode.getBoundingClientRect().width
+                : 0;
+
+
             filmstripRemoteVideosContainerStyle.width = _filmstripWidth;
+            filmstripRemoteVideosContainerStyle.position = 'relative';
+            filmstripRemoteVideosContainerStyle.left = chatWidth / 2;
             break;
         }
         }

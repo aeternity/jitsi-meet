@@ -106,8 +106,9 @@ export function _mapStateToProps(state: Object) {
     const { isOpen, messages } = state['features/chat'];
     const _localParticipant = getLocalParticipant(state);
 
+    // TODO: interface_config.ALWAYS_OPEN_CHAT || isOpen
     return {
-        _isOpen: isOpen,
+        _isOpen: true,
         _messages: messages,
         _showNamePrompt: !_localParticipant.name
     };

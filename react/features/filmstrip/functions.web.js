@@ -105,8 +105,15 @@ export function calculateThumbnailSizeForTileView({
     // of the window.
     const sideMargins = 30 * 2;
 
+    // TODO: chatNode && interface_config.ALWAYS_SHOW_CHAT
+    // The width of the chat overlay (for now constant 375px)
+    const chatNode = document.getElementById('sideToolbarContainer')
+    const chatWidth = chatNode
+        ? chatNode.getBoundingClientRect().width
+        : 0;
+
     const verticalMargins = visibleRows * 10;
-    const viewWidth = clientWidth - sideMargins;
+    const viewWidth = clientWidth - sideMargins - chatWidth;
     const viewHeight = clientHeight - topBottomPadding - verticalMargins;
     const initialWidth = viewWidth / columns;
     const aspectRatioHeight = initialWidth / TILE_ASPECT_RATIO;
