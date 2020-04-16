@@ -55,10 +55,11 @@ const Filmstrip = {
             width: `${avatarSize}px`
         });
 
+        const thumbEls = [ ...thumbs.remoteThumbs ];
+
         // localThumb is underfined when iAmRecorder is enabled
-        let thumbEls = [...thumbs.remoteThumbs];
         if (thumbs.localThumb) {
-            thumbEls.concat([...thumbs.localThumb])
+            thumbEls.concat([ ...thumbs.localThumb ]);
         }
 
         thumbEls.forEach(videoThumb => {
