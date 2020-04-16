@@ -7,6 +7,8 @@ import { getLocalParticipant } from '../../base/participants';
 
 import { sendMessage, toggleChat } from '../actions';
 
+declare var interfaceConfig: Object;
+
 /**
  * The type of the React {@code Component} props of {@code AbstractChat}.
  */

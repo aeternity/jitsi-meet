@@ -72,8 +72,8 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
  * @returns {boolean} True if tile view should be displayed.
  */
 export function shouldDisplayTileView(state: Object = {}) {
-    return interfaceConfig.TILE_VIEW_ALWAYS_OPEN ||
-        Boolean(
+    return interfaceConfig.TILE_VIEW_ALWAYS_OPEN
+        || Boolean(
             state['features/video-layout']
             && state['features/video-layout'].tileViewEnabled
             && (!state['features/etherpad']
