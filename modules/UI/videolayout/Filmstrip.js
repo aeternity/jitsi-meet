@@ -55,7 +55,13 @@ const Filmstrip = {
             width: `${avatarSize}px`
         });
 
-        [ ...thumbs.remoteThumbs, ...thumbs.localThumb ].forEach(videoThumb => {
+        // localThumb is underfined when iAmRecorder is enabled
+        let thumbEls = [...thumbs.remoteThumbs];
+        if (thumbs.localThumb) {
+            thumbEls.concat([...thumbs.localThumb])
+        }
+
+        thumbEls.forEach(videoThumb => {
             const $thumb = $(videoThumb);
 
             // Smaller video
@@ -88,7 +94,8 @@ const Filmstrip = {
 
         // If i am the only participant
         // Make my thumbnail a large videо
-        if (thumbs.remoteThumbs.length === 0) {
+        // localThumb is underfined when iAmRecorder is enabled
+        if (thumbs.remoteThumbs.length === 0 && thumbs.localThumb) {
             thumbs.localThumb.css(bigVideoCSS);
         }
     },
