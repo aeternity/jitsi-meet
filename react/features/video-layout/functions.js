@@ -72,21 +72,18 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
  * @returns {boolean} True if tile view should be displayed.
  */
 export function shouldDisplayTileView(state: Object = {}) {
-    // TODO:
-    //  return interface_config.ALWAYS_SHOW_TILEVIEW ||
-    //  Boolean(
-    //      state['features/video-layout']
-    //          && state['features/video-layout'].tileViewEnabled
-    //          && (!state['features/etherpad']
-    //              || !state['features/etherpad'].editing)
-    //
-    //          // Truthy check is needed for interfaceConfig to prevent errors on
-    //          // mobile which does not have interfaceConfig. On web, tile view
-    //          // should never be enabled for filmstrip only mode.
-    //          && (typeof interfaceConfig === 'undefined'
-    //              || !interfaceConfig.filmStripOnly)
-    //          && !getPinnedParticipant(state)
-    //  );
+    return interfaceConfig.TILE_VIEW_ALWAYS_OPEN ||
+        Boolean(
+            state['features/video-layout']
+            && state['features/video-layout'].tileViewEnabled
+            && (!state['features/etherpad']
+            || !state['features/etherpad'].editing)
 
-    return true;
+            // Truthy check is needed for interfaceConfig to prevent errors on
+            // mobile which does not have interfaceConfig. On web, tile view
+            // should never be enabled for filmstrip only mode.
+            && (typeof interfaceConfig === 'undefined'
+            || !interfaceConfig.filmStripOnly)
+            && !getPinnedParticipant(state)
+        );
 }

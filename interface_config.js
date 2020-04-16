@@ -5,6 +5,9 @@ var interfaceConfig = {
     // methods allowing to use variables both in css and js.
     DEFAULT_BACKGROUND: '#474747',
 
+    CHAT_ALWAYS_OPEN: true,
+    TILE_VIEW_ALWAYS_OPEN: true,
+
     /**
      * Whether or not the blurred video background for large video should be
      * displayed on browsers that can support it.
@@ -13,7 +16,7 @@ var interfaceConfig = {
 
     INITIAL_TOOLBAR_TIMEOUT: 20000,
     TOOLBAR_TIMEOUT: 4000,
-    TOOLBAR_ALWAYS_VISIBLE: false,
+    TOOLBAR_ALWAYS_VISIBLE: true,
     DEFAULT_REMOTE_DISPLAY_NAME: 'Fellow Jitster',
     DEFAULT_LOCAL_DISPLAY_NAME: 'me',
     SHOW_JITSI_WATERMARK: true,
@@ -48,10 +51,10 @@ var interfaceConfig = {
      */
     TOOLBAR_BUTTONS: [
         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-        'fodeviceselection', 'hangup', 'profile', 'info', 'chat', 'recording',
+        'fodeviceselection', 'hangup', 'profile', 'info', 'recording',
         'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
         'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone'
+        'videobackgroundblur', 'download', 'help', 'mute-everyone'
     ],
 
     SETTINGS_SECTIONS: [ 'devices', 'language', 'moderator', 'profile', 'calendar' ],
