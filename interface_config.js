@@ -5,9 +5,6 @@ var interfaceConfig = {
     // methods allowing to use variables both in css and js.
     DEFAULT_BACKGROUND: '#474747',
 
-    CHAT_ALWAYS_OPEN: true,
-    TILE_VIEW_ALWAYS_OPEN: true,
-
     /**
      * Whether or not the blurred video background for large video should be
      * displayed on browsers that can support it.
@@ -16,7 +13,7 @@ var interfaceConfig = {
 
     INITIAL_TOOLBAR_TIMEOUT: 20000,
     TOOLBAR_TIMEOUT: 4000,
-    TOOLBAR_ALWAYS_VISIBLE: true,
+    TOOLBAR_ALWAYS_VISIBLE: false,
     DEFAULT_REMOTE_DISPLAY_NAME: 'Fellow Jitster',
     DEFAULT_LOCAL_DISPLAY_NAME: 'me',
     SHOW_JITSI_WATERMARK: true,
@@ -51,10 +48,10 @@ var interfaceConfig = {
      */
     TOOLBAR_BUTTONS: [
         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-        'fodeviceselection', 'hangup', 'profile', 'info', 'recording',
+        'fodeviceselection', 'hangup', 'profile', 'info', 'chat', 'recording',
         'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
         'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-        'videobackgroundblur', 'download', 'help', 'mute-everyone'
+        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone'
     ],
 
     SETTINGS_SECTIONS: [ 'devices', 'language', 'moderator', 'profile', 'calendar' ],
@@ -209,7 +206,7 @@ var interfaceConfig = {
     * If this is set to false, the banner will not be rendered at all. If set to true, the check for extension(s)
     * being already installed is done before rendering.
     */
-    SHOW_CHROME_EXTENSION_BANNER: false
+    SHOW_CHROME_EXTENSION_BANNER: false,
 
     /**
      * When enabled, the kick participant button will not be presented for users without a JWT
@@ -248,6 +245,10 @@ var interfaceConfig = {
      * milliseconds, those notifications should remain displayed.
      */
     // ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
+
+    // Aeternity custom settings
+    CHAT_ALWAYS_OPEN: false,
+    TILE_VIEW_ALWAYS_OPEN: false
 
     // List of undocumented settings
     /**
