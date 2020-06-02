@@ -2,7 +2,6 @@
 
 import UIEvents from '../../../../service/UI/UIEvents';
 import { NOTIFICATION_TIMEOUT, showNotification } from '../../notifications';
-import { CALLING, INVITED } from '../../presence-status';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../app';
 import {
     CONFERENCE_WILL_JOIN,
@@ -11,15 +10,13 @@ import {
 } from '../conference';
 import { JitsiConferenceEvents } from '../lib-jitsi-meet';
 import { MiddlewareRegistry, StateListenerRegistry } from '../redux';
-import { playSound, registerSound, unregisterSound } from '../sounds';
+import { registerSound, unregisterSound } from '../sounds';
 
 import {
     DOMINANT_SPEAKER_CHANGED,
     KICK_PARTICIPANT,
     MUTE_REMOTE_PARTICIPANT,
     PARTICIPANT_DISPLAY_NAME_CHANGED,
-    PARTICIPANT_JOINED,
-    PARTICIPANT_LEFT,
     PARTICIPANT_UPDATED
 } from './actionTypes';
 import {
@@ -39,7 +36,6 @@ import {
     getFirstLoadableAvatarUrl,
     getLocalParticipant,
     getParticipantById,
-    getParticipantCount,
     getParticipantDisplayName
 } from './functions';
 import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE } from './sounds';
@@ -291,39 +287,6 @@ function _localParticipantLeft({ dispatch }, next, action) {
     dispatch(localParticipantLeft());
 
     return result;
-}
-
-/**
- * Plays sounds when participants join/leave conference.
- *
- * @param {Store} store - The redux store.
- * @param {Action} action - The redux action. Should be either
- * {@link PARTICIPANT_JOINED} or {@link PARTICIPANT_LEFT}.
- * @private
- * @returns {void}
- */
-function _maybePlaySounds({ getState, dispatch }, action) {
-    const state = getState();
-    const { startAudioMuted } = state['features/base/config'];
-
-    // We're not playing sounds for local participant
-    // nor when the user is joining past the "startAudioMuted" limit.
-    // The intention there was to not play user joined notification in big
-    // conferences where 100th person is joining.
-    if (!action.participant.local
-            && (!startAudioMuted
-                || getParticipantCount(state) < startAudioMuted)) {
-        if (action.type === PARTICIPANT_JOINED) {
-            const { presence } = action.participant;
-
-            // The sounds for the poltergeist are handled by features/invite.
-            if (presence !== INVITED && presence !== CALLING) {
-                dispatch(playSound(PARTICIPANT_JOINED_SOUND_ID));
-            }
-        } else if (action.type === PARTICIPANT_LEFT) {
-            dispatch(playSound(PARTICIPANT_LEFT_SOUND_ID));
-        }
-    }
 }
 
 /**
