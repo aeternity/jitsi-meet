@@ -114,16 +114,6 @@ MiddlewareRegistry.register(store => next => action => {
         break;
     }
 
-    case PARTICIPANT_JOINED: {
-        _maybePlaySounds(store, action);
-
-        return _participantJoinedOrUpdated(store, next, action);
-    }
-
-    case PARTICIPANT_LEFT:
-        _maybePlaySounds(store, action);
-        break;
-
     case PARTICIPANT_UPDATED:
         return _participantJoinedOrUpdated(store, next, action);
     }
