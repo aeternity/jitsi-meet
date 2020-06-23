@@ -2,6 +2,8 @@ name: Deploy to staging
 
 on:
   push:
+    branches:
+      - preview
   pull_request:
     branches:
       - preview
