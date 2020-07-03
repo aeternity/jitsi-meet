@@ -4,11 +4,11 @@ on: [push]
 
 jobs:
   run-ci:
-    name: Build Frontend
+    name: Deploy Frontend
     runs-on: ubuntu-latest
     steps:
       # strip 'refs/heads/' from GITHUB_REF and export as ${{ steps.get_branch.outputs.branch }}
-      - name: Get branch name
+      - name: Export branch slug for other jobs
         id: get_branch
         run: echo "::set-output name=branch::${GITHUB_REF##*/}"
       - uses: actions/checkout@v2
@@ -18,6 +18,13 @@ jobs:
       - run: npm install
       - run: make
       - run: make source-package
+      - name: Create GitHub deployment
+        uses: bobheadxi/deployments@v0.4.2
+        id: deployment
+        with:
+          step: start
+          token: ${{ github.token }}
+          env: ${{ steps.get_branch.outputs.branch }}
       - name: Deploy Feature branch to Staging server
         uses: Pendect/action-rsyncer@v1.1.0
         env:
@@ -32,10 +39,20 @@ jobs:
         with:
           src: 'resources/prosody-plugins/'
           dest: ${{ secrets.TEST_DEPLOY_HOST }}:${{ secrets.TEST_BRANCHES_PROSODY_DEST }}/${{ steps.get_branch.outputs.branch }}
-      - name: Enable branch as subdomain and restart services
+      - name: Restart services
         uses: JimCronqvist/action-ssh@master
         with:
           hosts: ${{ secrets.TEST_DEPLOY_HOST }}
           privateKey: ${{ secrets.DEPLOY_SSH_KEY }}
           command: |
             sudo systemctl restart nginx prosody jicofo jitsi-videobridge2
+      - name: Update deployment status
+        uses: bobheadxi/deployments@v0.4.2
+        if: always()
+        with:
+          step: finish
+          token: ${{ github.token }}
+          status: ${{ job.status }}
+          desc: Feature branch "${{ steps.get_branch.outputs.branch }}"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env_url: https://${{ steps.get_branch.outputs.branch }}.${{ secrets.TEST_DOMAIN }}
