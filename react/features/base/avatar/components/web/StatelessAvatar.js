@@ -6,7 +6,7 @@ import React from 'react';
 import { Icon } from '../../../icons';
 import AbstractStatelessAvatar, { type Props as AbstractProps } from '../AbstractStatelessAvatar';
 
-import { AVATAR_CONFIG } from './avatarCongif';
+import { AVATAR_CONFIG } from './avatarConfig';
 
 type Props = AbstractProps & {
 
