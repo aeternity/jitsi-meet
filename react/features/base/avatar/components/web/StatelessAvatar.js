@@ -3,6 +3,7 @@ import Avatars from '@dicebear/avatars';
 import sprites from '@dicebear/avatars-avataaars-sprites';
 import React from 'react';
 
+import { isAccountOrChainName } from '../../../../aeternity/utils';
 import { Icon } from '../../../icons';
 import AbstractStatelessAvatar, { type Props as AbstractProps } from '../AbstractStatelessAvatar';
 
@@ -48,6 +49,7 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
      */
     render() {
         const { initials, url, fullName } = this.props;
+        const hasWallet = isAccountOrChainName(fullName);
 
         if (this._isIcon(url)) {
             return (
@@ -62,7 +64,20 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
             );
         }
 
-        if (url) {
+        if (url && !hasWallet) {
+            return (
+                <div className = { this._getBadgeClassName() }>
+                    <img
+                        className = { this._getAvatarClassName() }
+                        id = { this.props.id }
+                        onError = { this.props.onAvatarLoadError }
+                        src = { url }
+                        style = { this._getAvatarStyle() } />
+                </div>
+            );
+        }
+
+        if (url && hasWallet) {
             const avatars = new Avatars(sprites, AVATAR_CONFIG);
             const svg = avatars.create(fullName);
 
