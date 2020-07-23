@@ -1,9 +1,12 @@
 // @flow
-
+import Avatars from '@dicebear/avatars';
+import sprites from '@dicebear/avatars-avataaars-sprites';
 import React from 'react';
 
 import { Icon } from '../../../icons';
 import AbstractStatelessAvatar, { type Props as AbstractProps } from '../AbstractStatelessAvatar';
+
+import { AVATAR_CONFIG } from './avatarCongif';
 
 type Props = AbstractProps & {
 
@@ -40,6 +43,8 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
      */
     render() {
         const { initials, url } = this.props;
+        const avatars = new Avatars(sprites, AVATAR_CONFIG);
+        const svg = avatars.create(initials);
 
         if (this._isIcon(url)) {
             return (
@@ -73,21 +78,9 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
                     className = { `${this._getAvatarClassName()} ${this._getBadgeClassName()}` }
                     id = { this.props.id }
                     style = { this._getAvatarStyle(this.props.color) }>
-                    <svg
+                    <img
                         className = 'avatar-svg'
-                        viewBox = '0 0 100 100'
-                        xmlns = 'http://www.w3.org/2000/svg'
-                        xmlnsXlink = 'http://www.w3.org/1999/xlink'>
-                        <text
-                            dominantBaseline = 'central'
-                            fill = 'rgba(255,255,255,.6)'
-                            fontSize = '40pt'
-                            textAnchor = 'middle'
-                            x = '50'
-                            y = '50'>
-                            { initials }
-                        </text>
-                    </svg>
+                        src = { svg } />
                 </div>
             );
         }
