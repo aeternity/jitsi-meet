@@ -46,11 +46,11 @@ export class App extends AbstractApp {
      * Start to search the wallet with sdk.
      *
      * @private
-     * @param {Object} signCb - Sign function.
+     * @param {Function} sign - Sign function.
      * @returns {void}
      *
      */
-    async _scanForWallets(signCb) {
+    async _scanForWallets(sign) {
         const connection = await browserWindowMessageConnection({
             connectionInfo: { id: 'spy' }
         });
@@ -63,7 +63,9 @@ export class App extends AbstractApp {
                 detector.stopScan();
                 await client.connectToWallet(await newWallet.getConnection());
                 await client.subscribeAddress('subscribe', 'current');
-                signCb();
+                // todo: redux
+                this.setState({ walletFound: true });
+                sign();
             }
         });
     }
