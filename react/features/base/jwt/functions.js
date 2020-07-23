@@ -22,7 +22,7 @@ export function parseJWTFromURLParams(url: URL = window.location) {
 }
 
 /**
- * Sogn.
+ * Sign.
  *
  * @param {string} signatureParam - Signature from the query string.
  * @param {string} addressParam - Address from the query string.
@@ -30,7 +30,7 @@ export function parseJWTFromURLParams(url: URL = window.location) {
  * @returns {void}
  *
  */
-export async function _sign(signatureParam, addressParam, messageParam) {
+export async function sign(signatureParam, addressParam, messageParam) {
     const message = messageParam || `I would like to generate JWT token at ${new Date().toUTCString()}`;
     const signature = signatureParam || await client.signMessage(message);
     const address = addressParam || client.rpcClient.getCurrentAccount();

@@ -12,6 +12,7 @@ import {
 import { AbstractDialogTab } from '../../../base/dialog';
 import type { Props as AbstractDialogTabProps } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
+import { connect } from '../../../base/redux';
 
 import WebLogin from './WebLoginButton';
 
@@ -212,9 +213,9 @@ class ProfileTab extends AbstractDialogTab<Props> {
                             className = 'settings-pane--auth_right'
                             id = 'web_wallets_button'
                             type = 'button'>
-                            <WebLogin >
+                            {!this.props.hasToken && <WebLogin>
                                 Login with web wallet
-                            </WebLogin>
+                            </WebLogin>}
                         </Button>
                     </div>
                 </div>
@@ -223,4 +224,9 @@ class ProfileTab extends AbstractDialogTab<Props> {
     }
 }
 
-export default translate(ProfileTab);
+const _mapStateToProps = state => ({
+    hasToken: state['features/base/jwt'].jwt !== undefined
+});
+
+export default connect(_mapStateToProps)(translate(ProfileTab));
+

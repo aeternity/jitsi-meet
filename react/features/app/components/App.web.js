@@ -1,5 +1,6 @@
 // @flow
 // eslint-disable-next-line max-len
+/* globals APP */
 import browserWindowMessageConnection from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/connection/browser-window-message';
 import Detector from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/wallet-detector';
 import { AtlasKitThemeProvider } from '@atlaskit/theme';
@@ -7,7 +8,7 @@ import React from 'react';
 
 import { client, initClient } from '../../../client';
 import { DialogContainer } from '../../base/dialog';
-import { _sign } from '../../base/jwt/functions';
+import { sign } from '../../base/jwt/functions';
 import { ChromeExtensionBanner } from '../../chrome-extension-banner';
 import '../../base/user-interaction';
 import '../../chat';
@@ -38,7 +39,7 @@ export class App extends AbstractApp {
         super.componentDidMount();
 
         initClient().then(() => {
-            this._scanForWallets(_sign);
+            this._scanForWallets(sign);
         });
     }
 
@@ -63,8 +64,6 @@ export class App extends AbstractApp {
                 detector.stopScan();
                 await client.connectToWallet(await newWallet.getConnection());
                 await client.subscribeAddress('subscribe', 'current');
-                // todo: redux
-                this.setState({ walletFound: true });
                 sign();
             }
         });
