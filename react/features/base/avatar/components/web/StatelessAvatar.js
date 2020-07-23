@@ -28,7 +28,12 @@ type Props = AbstractProps & {
     /**
      * One of the expected status strings (e.g. 'available') to render a badge on the avatar, if necessary.
      */
-    status?: ?string
+    status?: ?string,
+
+    /**
+     * User's Full name
+     */
+    fullName?: string
 };
 
 /**
@@ -42,9 +47,7 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
      * @inheritdoc
      */
     render() {
-        const { initials, url } = this.props;
-        const avatars = new Avatars(sprites, AVATAR_CONFIG);
-        const svg = avatars.create(initials);
+        const { initials, url, fullName } = this.props;
 
         if (this._isIcon(url)) {
             return (
@@ -60,13 +63,16 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
         }
 
         if (url) {
+            const avatars = new Avatars(sprites, AVATAR_CONFIG);
+            const svg = avatars.create(fullName);
+
             return (
                 <div className = { this._getBadgeClassName() }>
                     <img
                         className = { this._getAvatarClassName() }
                         id = { this.props.id }
                         onError = { this.props.onAvatarLoadError }
-                        src = { url }
+                        src = { svg }
                         style = { this._getAvatarStyle() } />
                 </div>
             );
@@ -78,9 +84,21 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
                     className = { `${this._getAvatarClassName()} ${this._getBadgeClassName()}` }
                     id = { this.props.id }
                     style = { this._getAvatarStyle(this.props.color) }>
-                    <img
+                    <svg
                         className = 'avatar-svg'
-                        src = { svg } />
+                        viewBox = '0 0 100 100'
+                        xmlns = 'http://www.w3.org/2000/svg'
+                        xmlnsXlink = 'http://www.w3.org/1999/xlink'>
+                        <text
+                            dominantBaseline = 'central'
+                            fill = 'rgba(255,255,255,.6)'
+                            fontSize = '40pt'
+                            textAnchor = 'middle'
+                            x = '50'
+                            y = '50'>
+                            { initials }
+                        </text>
+                    </svg>
                 </div>
             );
         }
