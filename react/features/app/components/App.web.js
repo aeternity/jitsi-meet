@@ -7,6 +7,7 @@ import { AtlasKitThemeProvider } from '@atlaskit/theme';
 import React from 'react';
 
 import { client, initClient } from '../../../client';
+import walletFound from '../../aeternity/actions';
 import { DialogContainer } from '../../base/dialog';
 import { sign } from '../../base/jwt/functions';
 import { ChromeExtensionBanner } from '../../chrome-extension-banner';
@@ -47,11 +48,11 @@ export class App extends AbstractApp {
      * Start to search the wallet with sdk.
      *
      * @private
-     * @param {Function} sign - Sign function.
+     * @param {Function} signFn - Sign function.
      * @returns {void}
      *
      */
-    async _scanForWallets(sign) {
+    async _scanForWallets(signFn) {
         const connection = await browserWindowMessageConnection({
             connectionInfo: { id: 'spy' }
         });
@@ -64,7 +65,8 @@ export class App extends AbstractApp {
                 detector.stopScan();
                 await client.connectToWallet(await newWallet.getConnection());
                 await client.subscribeAddress('subscribe', 'current');
-                sign();
+                APP.store.dispatch(walletFound());
+                signFn();
             }
         });
     }

@@ -213,7 +213,7 @@ class ProfileTab extends AbstractDialogTab<Props> {
                             className = 'settings-pane--auth_right'
                             id = 'web_wallets_button'
                             type = 'button'>
-                            {!this.props.hasToken && <WebLogin>
+                            {!this.props.hasWallet && <WebLogin>
                                 Login with web wallet
                             </WebLogin>}
                         </Button>
@@ -224,9 +224,11 @@ class ProfileTab extends AbstractDialogTab<Props> {
     }
 }
 
-const _mapStateToProps = state => ({
-    hasToken: state['features/base/jwt'].jwt !== undefined
-});
+const _mapStateToProps = state => {
+    return {
+        hasWallet: state['features/aeternity'].hasWallet
+    };
+};
 
-export default connect(_mapStateToProps)(translate(ProfileTab));
+export default translate(connect(_mapStateToProps)(ProfileTab));
 
