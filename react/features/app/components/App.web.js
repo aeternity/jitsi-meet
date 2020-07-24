@@ -7,7 +7,7 @@ import { AtlasKitThemeProvider } from '@atlaskit/theme';
 import React from 'react';
 
 import { client, initClient } from '../../../client';
-import walletFound from '../../aeternity/actions';
+import { walletFound } from '../../aeternity/actions';
 import { DialogContainer } from '../../base/dialog';
 import { sign } from '../../base/jwt/functions';
 import { ChromeExtensionBanner } from '../../chrome-extension-banner';
