@@ -5,5 +5,7 @@
 * @returns {boolean}
  */
 export function isAccountOrChainName(str) {
-    return str.startsWith('ak_') || str.endsWith('.chain');
+    const regExp = /(ak_[A-Za-z0-9]{48,50})|[A-Za-z0-9]+\.chain/;
+
+    return regExp.test(str);
 }

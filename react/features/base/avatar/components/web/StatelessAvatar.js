@@ -77,7 +77,7 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
             );
         }
 
-        if (url && hasWallet) {
+        if (hasWallet) {
             const avatars = new Avatars(sprites, AVATAR_CONFIG);
             const svg = avatars.create(fullName);
 
