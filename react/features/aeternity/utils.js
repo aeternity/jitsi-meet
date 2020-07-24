@@ -5,7 +5,7 @@
 * @returns {boolean}
  */
 export function isAccountOrChainName(str) {
-    const regExp = /(ak_[A-Za-z0-9]{48,50})|[A-Za-z0-9]+\.chain/;
+    const regExp = /^ak_[A-Za-z0-9]{48,50}$|^[A-Za-z0-9]{1,31}\.chain$/;
 
     return regExp.test(str);
 }
