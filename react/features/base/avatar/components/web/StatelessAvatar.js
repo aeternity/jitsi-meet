@@ -64,7 +64,7 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
             );
         }
 
-        if (url && !hasWallet) {
+        if (url) {
             return (
                 <div className = { this._getBadgeClassName() }>
                     <img
