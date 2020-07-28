@@ -1,6 +1,4 @@
 // @flow
-import Avatars from '@dicebear/avatars';
-import sprites from '@dicebear/avatars-avataaars-sprites';
 import React from 'react';
 
 import { isAccountOrChainName } from '../../../../aeternity/utils';
@@ -64,6 +62,10 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
             );
         }
 
+        if (!url && hasWallet) {
+            url = `https://avatars.z52da5wt.xyz/${fullName}`;
+        }
+
         if (url) {
             return (
                 <div className = { this._getBadgeClassName() }>
@@ -72,22 +74,6 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
                         id = { this.props.id }
                         onError = { this.props.onAvatarLoadError }
                         src = { url }
-                        style = { this._getAvatarStyle() } />
-                </div>
-            );
-        }
-
-        if (hasWallet) {
-            const avatars = new Avatars(sprites, AVATAR_CONFIG);
-            const svg = avatars.create(fullName);
-
-            return (
-                <div className = { this._getBadgeClassName() }>
-                    <img
-                        className = { this._getAvatarClassName() }
-                        id = { this.props.id }
-                        onError = { this.props.onAvatarLoadError }
-                        src = { svg }
                         style = { this._getAvatarStyle() } />
                 </div>
             );
