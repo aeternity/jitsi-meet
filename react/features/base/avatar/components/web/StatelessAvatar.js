@@ -44,9 +44,8 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
      * @inheritdoc
      */
     render() {
-        const { initials, url, fullName } = this.props;
+        let { initials, url, fullName } = this.props;
         const hasWallet = isAccountOrChainName(fullName);
-        let avatarUrl = url;
 
         if (this._isIcon(url)) {
             return (
@@ -62,17 +61,17 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
         }
 
         if (!url && hasWallet) {
-            avatarUrl = `https://avatars.z52da5wt.xyz/${fullName}`;
+            url = `https://avatars.z52da5wt.xyz/${fullName}`;
         }
 
-        if (avatarUrl) {
+        if (url) {
             return (
                 <div className = { this._getBadgeClassName() }>
                     <img
                         className = { this._getAvatarClassName() }
                         id = { this.props.id }
                         onError = { this.props.onAvatarLoadError }
-                        src = { avatarUrl }
+                        src = { url }
                         style = { this._getAvatarStyle() } />
                 </div>
             );
