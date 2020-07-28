@@ -5,8 +5,6 @@ import { isAccountOrChainName } from '../../../../aeternity/utils';
 import { Icon } from '../../../icons';
 import AbstractStatelessAvatar, { type Props as AbstractProps } from '../AbstractStatelessAvatar';
 
-import { AVATAR_CONFIG } from './avatarConfig';
-
 type Props = AbstractProps & {
 
     /**
@@ -48,6 +46,7 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
     render() {
         const { initials, url, fullName } = this.props;
         const hasWallet = isAccountOrChainName(fullName);
+        let avatarUrl = url;
 
         if (this._isIcon(url)) {
             return (
@@ -63,17 +62,17 @@ export default class StatelessAvatar extends AbstractStatelessAvatar<Props> {
         }
 
         if (!url && hasWallet) {
-            url = `https://avatars.z52da5wt.xyz/${fullName}`;
+            avatarUrl = `https://avatars.z52da5wt.xyz/${fullName}`;
         }
 
-        if (url) {
+        if (avatarUrl) {
             return (
                 <div className = { this._getBadgeClassName() }>
                     <img
                         className = { this._getAvatarClassName() }
                         id = { this.props.id }
                         onError = { this.props.onAvatarLoadError }
-                        src = { url }
+                        src = { avatarUrl }
                         style = { this._getAvatarStyle() } />
                 </div>
             );
