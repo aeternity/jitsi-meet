@@ -72,8 +72,8 @@ const aeternity = {
 
         this.contract = await client.getContractInstance(TIPPING_INTERFACE, { contractAddress: CONTRACT_ADDRESS });
     },
-    async tip(url, title, amount): void {
-        this.initTippingContractIfNeeded().then(() => this.contract.methods.tip(url, title, { amount }));
+    async tip(url, title, amount): Promise {
+        return this.initTippingContractIfNeeded().then(() => this.contract.methods.tip(url, title, { amount }));
     },
     util: {
         aeToAtoms(ae) {
@@ -223,19 +223,17 @@ class TipButton extends Component<Props, State> {
             return;
         }
 
-        this.setState({ showLoading: true });
-
         const amount = aeternity.util.aeToAtoms(this.state.value);
         const url = `${URLS.SUPER}/user-profile/${this.props.account}`;
 
-        console.log('aeternity.contract is still `null`');
-        console.log({ url, message: this.state.message, amount, contract: aeternity.contract, client });
-        // tip with sdk [wip]
         try {
+            this.setState({ showLoading: true });
             await aeternity.tip(url, this.state.message, amount);
         } catch (e) {
-            console.error(e);
-            this.setState({ error: `error ${JSON.stringify(e)}` });
+            // todo: translates
+            this.setState({ error: 'An error occurred while sending the tip. Please try again later' });
+        } finally {
+            this.setState({ showLoading: false });
         }
     }
 
@@ -268,7 +266,7 @@ class TipButton extends Component<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const { isOpen } = this.state;
+        const { isOpen, error, showLoading } = this.state;
 
         return (
             <div>
@@ -286,6 +284,7 @@ class TipButton extends Component<Props, State> {
                         <button onClick = { this._onSendTip }>Send</button>
                     </div>
                 )}
+                {!showLoading && error && error}
             </div>
         );
     }
