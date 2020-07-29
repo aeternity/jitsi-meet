@@ -17,6 +17,7 @@ import { connect } from '../../../base/redux';
 import WebLogin from './WebLoginButton';
 
 declare var APP: Object;
+declare var interfaceConfig: Object;
 
 /**
  * The type of the React {@code Component} props of {@link ProfileTab}.
@@ -178,6 +179,8 @@ class ProfileTab extends AbstractDialogTab<Props> {
             t
         } = this.props;
 
+        const { ENABLE_SUPERHERO } = interfaceConfig;
+
         return (
             <div>
                 <div className = 'settings-pane--auth'>
@@ -208,15 +211,15 @@ class ProfileTab extends AbstractDialogTab<Props> {
                                 title = { t('settings.connectedAs', { name: walletName }) }>
                                 { t('settings.connectedAs', { name: walletName }) }
                             </div> }
-                        <Button
+                        { ENABLE_SUPERHERO && !this.props.hasWallet && <Button
                             appearance = 'primary'
                             className = 'settings-pane--auth_right'
                             id = 'web_wallets_button'
                             type = 'button'>
-                            {!this.props.hasWallet && <WebLogin>
+                            <WebLogin>
                                 Login with web wallet
-                            </WebLogin>}
-                        </Button>
+                            </WebLogin>
+                        </Button>}
                     </div>
                 </div>
             </div>

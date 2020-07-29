@@ -2,9 +2,11 @@
 import InlineDialog from '@atlaskit/inline-dialog';
 import React, { Component } from 'react';
 
+import { isWalletNameSet } from '../../aeternity/utils';
 import { getRoomName } from '../../base/conference';
 import { translate } from '../../base/i18n';
 import { Icon, IconPhone, IconVolumeOff } from '../../base/icons';
+import { getLocalParticipant } from '../../base/participants';
 import { connect } from '../../base/redux';
 import { getDisplayName, updateSettings } from '../../base/settings';
 import TipButton from '../../conference/components/web/TipButton';
@@ -30,6 +32,7 @@ import ParticipantName from './preview/ParticipantName';
 import Preview from './preview/Preview';
 
 declare var APP: Object;
+
 
 type Props = {
 
@@ -87,6 +90,17 @@ type Props = {
      * If 'JoinByPhoneDialog' is visible or not.
      */
     showDialog: boolean,
+
+    /**
+     * if webwallet address is set
+     */
+
+    isWalletNameSet: boolean,
+
+    /**
+     * local participant
+    */
+    localParticipant: Object,
 
     /**
      * Used for translation.
@@ -219,15 +233,25 @@ class Prejoin extends Component<Props, State> {
             joinConferenceWithoutAudio,
             name,
             showDialog,
+            isWalletNameSet,
+            localParticipant,
             t
         } = this.props;
+        let isParticipantEditable = true;
+        let displayName = name;
+
+        if (isWalletNameSet) {
+            displayName = localParticipant.name;
+            isParticipantEditable = false;
+        }
+        isParticipantEditable = isParticipantEditable && isAnonymousUser;
 
         const { _closeDialog, _onCheckboxChange, _onDropdownClose, _onOptionsClick, _setName, _showDialog } = this;
         const { showJoinByPhoneButtons } = this.state;
 
         return (
             <div className = 'prejoin-full-page'>
-                <Preview name = { name } />
+                <Preview name = { displayName } />
                 <div className = 'prejoin-input-area-container'>
                     <div className = 'prejoin-input-area'>
                         <div className = 'prejoin-title'>
@@ -241,10 +265,10 @@ class Prejoin extends Component<Props, State> {
                         <CopyMeetingUrl />
 
                         <ParticipantName
-                            isEditable = { isAnonymousUser }
+                            isEditable = { isParticipantEditable }
                             joinConference = { joinConference }
                             setName = { _setName }
-                            value = { name } />
+                            value = { displayName } />
 
                         <div className = 'prejoin-preview-dropdown-container'>
                             <InlineDialog
@@ -271,7 +295,7 @@ class Prejoin extends Component<Props, State> {
                                 isOpen = { showJoinByPhoneButtons }
                                 onClose = { _onDropdownClose }>
                                 <ActionButton
-                                    disabled = { !name }
+                                    disabled = { !displayName }
                                     hasOptions = { true }
                                     onClick = { joinConference }
                                     onOptionsClick = { _onOptionsClick }
@@ -320,7 +344,9 @@ function mapStateToProps(state): Object {
         name: getDisplayName(state),
         roomName: getRoomName(state),
         showDialog: isJoinByPhoneDialogVisible(state),
-        hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state)
+        hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
+        isWalletNameSet: isWalletNameSet(state),
+        localParticipant: getLocalParticipant(state)
     };
 }
 
