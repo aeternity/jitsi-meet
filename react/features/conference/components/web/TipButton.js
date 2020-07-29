@@ -1,8 +1,8 @@
 // @flow
 /* eslint-disable comma-dangle, max-len */
 
-import React, { Component } from 'react';
 import BigNumber from 'bignumber.js';
+import React, { Component } from 'react';
 
 import TIPPING_INTERFACE from 'superhero-utls/src/contracts/TippingInterface.aes';
 
@@ -12,6 +12,7 @@ import {
 } from '../../../aeternity';
 import { createDeepLinkUrl } from '../../../base/util/createDeepLinkUrl';
 
+// import iconTip from './iconTip.svg';
 
 type Props = {
 
@@ -19,6 +20,11 @@ type Props = {
      * Account or chain name
      */
     account: string,
+
+    /*
+    * Whether sdk is connected to extension and client is inited
+    */
+   connectedToExtension: boolean
 };
 
 type State = {
@@ -270,6 +276,10 @@ class TipButton extends Component<Props, State> {
 
         return (
             <div>
+                {this.props.connectedToExtension
+                    ? 'walletReady and use sdk tip'
+                    : 'wallet is not ready and use web wallet'}
+                {/* <img src = { iconTip } /> */}
                 <button onClick = { this._onTipDeepLink }>
                     Deep link Tip
                 </button>

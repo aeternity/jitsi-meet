@@ -106,6 +106,8 @@ type Props = {
      * Used for translation.
      */
     t: Function,
+
+    connectedToExtension: boolean
 };
 
 type State = {
@@ -259,7 +261,9 @@ class Prejoin extends Component<Props, State> {
                         </div>
 
                         <div>
-                            <TipButton account = 'some.chain' />
+                            <TipButton
+                                account = 'some.chain'
+                                connectedToExtension = { this.props.connectedToExtension } />
                         </div>
 
                         <CopyMeetingUrl />
@@ -338,6 +342,8 @@ class Prejoin extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state): Object {
+    console.log({ state: state['features/aeternity'] });
+
     return {
         isAnonymousUser: isGuest(state),
         deviceStatusVisible: isDeviceStatusVisible(state),
@@ -346,7 +352,8 @@ function mapStateToProps(state): Object {
         showDialog: isJoinByPhoneDialogVisible(state),
         hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
         isWalletNameSet: isWalletNameSet(state),
-        localParticipant: getLocalParticipant(state)
+        localParticipant: getLocalParticipant(state),
+        connectedToExtension: state['features/aeternity'] && state['features/aeternity'].hasWallet
     };
 }
 
