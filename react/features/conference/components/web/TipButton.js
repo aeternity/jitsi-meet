@@ -72,13 +72,8 @@ const aeternity = {
 
         this.contract = await client.getContractInstance(TIPPING_INTERFACE, { contractAddress: CONTRACT_ADDRESS });
     },
-    async tip(url, title, amount): Promise {
-        this.initTippingContractIfNeeded().then(
-            () => {
-                console.log('NOT FIRE');
-                this.contract.methods.tip(url, title, { amount });
-            }
-        );
+    async tip(url, title, amount): void {
+        this.initTippingContractIfNeeded().then(() => this.contract.methods.tip(url, title, { amount }));
     },
     util: {
         aeToAtoms(ae) {
