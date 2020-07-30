@@ -2,7 +2,7 @@
 // eslint-disable-next-line max-len
 import browserWindowMessageConnection from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/connection/browser-window-message';
 import Detector from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/wallet-detector';
-import { jitsiLocalStorage } from 'js-utils';
+import { jitsiLocalStorage } from '@jitsi/js-utils';
 import _ from 'lodash';
 import React from 'react';
 
@@ -37,7 +37,6 @@ import { default as Notice } from './Notice';
 import { default as Subject } from './Subject';
 
 declare var APP: Object;
-declare var config: Object;
 declare var interfaceConfig: Object;
 
 /**
