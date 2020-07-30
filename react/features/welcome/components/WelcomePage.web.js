@@ -4,7 +4,6 @@ import React from 'react';
 import { isMobileBrowser } from '../../base/environment/utils';
 import { translate } from '../../base/i18n';
 import { Icon, IconWarning } from '../../base/icons';
-import { authWithJWTDeeplink } from '../../base/jwt/functions';
 import { Watermarks } from '../../base/react';
 import { connect } from '../../base/redux';
 import sendRoomNameSignal from '../../base/util/sendRoomNameSignal';
@@ -139,8 +138,6 @@ class WelcomePage extends AbstractWelcomePage {
                 this._additionalToolbarContentTemplate.content.cloneNode(true)
             );
         }
-
-        authWithJWTDeeplink();
     }
 
     /**

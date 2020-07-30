@@ -156,7 +156,7 @@ function _setJWT(store, next, action) {
                 }
             }
 
-            jitsiLocalStorage.setItem('features/base/jwt', jwt);
+            jitsiLocalStorage.setItem('features/base/jwt', JSON.stringify({ jwt }));
         } else if (typeof APP === 'undefined') {
             // The logic of restoring JWT overrides make sense only on mobile.
             // On Web it should eventually be restored from storage, but there's

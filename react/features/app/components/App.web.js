@@ -6,6 +6,7 @@ import Detector from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/wal
 import { AtlasKitThemeProvider } from '@atlaskit/theme';
 import React from 'react';
 
+import { authWithJWTDeeplink } from '../../base/jwt/functions';
 import { client, initClient } from '../../../client';
 import { walletFound } from '../../aeternity/actions';
 import { DialogContainer } from '../../base/dialog';
@@ -37,6 +38,7 @@ export class App extends AbstractApp {
         super(props);
         this._scanForWallets = this._scanForWallets.bind(this);
     }
+
     /**
      * Initializes the app.
      *
@@ -44,6 +46,8 @@ export class App extends AbstractApp {
      */
     componentDidMount() {
         super.componentDidMount();
+
+        authWithJWTDeeplink();
 
         initClient().then(() => {
             this._scanForWallets(sign);
