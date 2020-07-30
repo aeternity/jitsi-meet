@@ -267,6 +267,7 @@ var interfaceConfig = {
     // ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
 
     // Aeternity custom settings
+    // eslint-disable-next-line sort-keys
     CHAT_ALWAYS_OPEN: false,
     TILE_VIEW_ALWAYS_OPEN: false,
 
