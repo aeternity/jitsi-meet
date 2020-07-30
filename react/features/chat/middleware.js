@@ -1,5 +1,6 @@
 // @flow
 
+import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app';
 import {
     CONFERENCE_JOINED,
     getCurrentConference
@@ -16,17 +17,21 @@ import {
     getParticipantDisplayName
 } from '../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
-import { isButtonEnabled, showToolbox } from '../toolbox';
+import { playSound, registerSound, unregisterSound } from '../base/sounds';
+import { showToolbox } from '../toolbox/actions';
+import { isButtonEnabled } from '../toolbox/functions';
 
 import { SEND_MESSAGE, SET_PRIVATE_MESSAGE_RECIPIENT } from './actionTypes';
 import { addMessage, clearMessages, toggleChat } from './actions';
 import { ChatPrivacyDialog } from './components';
 import {
     CHAT_VIEW_MODAL_ID,
+    INCOMING_MSG_SOUND_ID,
     MESSAGE_TYPE_ERROR,
     MESSAGE_TYPE_LOCAL,
     MESSAGE_TYPE_REMOTE
 } from './constants';
+import { INCOMING_MSG_SOUND_FILE } from './sounds';
 
 declare var APP: Object;
 declare var interfaceConfig : Object;
@@ -49,6 +54,15 @@ MiddlewareRegistry.register(store => next => action => {
     const { dispatch } = store;
 
     switch (action.type) {
+    case APP_WILL_MOUNT:
+        dispatch(
+                registerSound(INCOMING_MSG_SOUND_ID, INCOMING_MSG_SOUND_FILE));
+        break;
+
+    case APP_WILL_UNMOUNT:
+        dispatch(unregisterSound(INCOMING_MSG_SOUND_ID));
+        break;
+
     case CONFERENCE_JOINED:
         _addChatMsgListener(action.conference, store);
         break;
@@ -207,6 +221,10 @@ function _handleReceivedMessage({ dispatch, getState }, { id, message, nick, pri
     // Logic for all platforms:
     const state = getState();
     const { isOpen: isChatOpen } = state['features/chat'];
+
+    if (!isChatOpen) {
+        dispatch(playSound(INCOMING_MSG_SOUND_ID));
+    }
 
     // Provide a default for for the case when a message is being
     // backfilled for a participant that has left the conference.

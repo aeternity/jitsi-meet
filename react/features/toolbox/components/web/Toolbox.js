@@ -12,6 +12,7 @@ import { openDialog, toggleDialog } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
 import {
     IconChat,
+    IconCodeBlock,
     IconExitFullScreen,
     IconFeedback,
     IconFullScreen,
@@ -30,10 +31,11 @@ import {
     isLocalParticipantModerator
 } from '../../../base/participants';
 import { connect, equals } from '../../../base/redux';
-import { OverflowMenuItem } from '../../../base/toolbox';
+import { OverflowMenuItem } from '../../../base/toolbox/components';
 import { getLocalVideoTrack, toggleScreensharing } from '../../../base/tracks';
 import { VideoBlurButton } from '../../../blur';
-import { ChatCounter, toggleChat } from '../../../chat';
+import { CHAT_SIZE, ChatCounter, toggleChat } from '../../../chat';
+import { EmbedMeetingDialog } from '../../../embed-meeting';
 import { E2EEButton } from '../../../e2ee';
 import { SharedDocumentButton } from '../../../etherpad';
 import { openFeedbackDialog } from '../../../feedback';
@@ -60,6 +62,7 @@ import {
 } from '../../../subtitles';
 import {
     TileViewButton,
+    shouldDisplayTileView,
     toggleTileView
 } from '../../../video-layout';
 import {
@@ -244,6 +247,7 @@ class Toolbox extends Component<Props, State> {
         this._onToolbarOpenInvite = this._onToolbarOpenInvite.bind(this);
         this._onToolbarOpenKeyboardShortcuts = this._onToolbarOpenKeyboardShortcuts.bind(this);
         this._onToolbarOpenSpeakerStats = this._onToolbarOpenSpeakerStats.bind(this);
+        this._onToolbarOpenEmbedMeeting = this._onToolbarOpenEmbedMeeting.bind(this);
         this._onToolbarOpenVideoQuality = this._onToolbarOpenVideoQuality.bind(this);
         this._onToolbarToggleChat = this._onToolbarToggleChat.bind(this);
         this._onToolbarToggleFullScreen = this._onToolbarToggleFullScreen.bind(this);
@@ -329,6 +333,10 @@ class Toolbox extends Component<Props, State> {
             this._onSetOverflowVisible(false);
             this.props.dispatch(setToolbarHovered(false));
         }
+
+        if (this.props._chatOpen !== prevProps._chatOpen) {
+            this._onResize();
+        }
     }
 
     /**
@@ -351,9 +359,9 @@ class Toolbox extends Component<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const { _visible, _visibleButtons } = this.props;
+        const { _chatOpen, _visible, _visibleButtons } = this.props;
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
-            _visibleButtons.size ? '' : 'no-buttons'}`;
+            _visibleButtons.size ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
         return (
             <div
@@ -377,6 +385,16 @@ class Toolbox extends Component<Props, State> {
         const { _conference } = this.props;
 
         this.props.dispatch(openFeedbackDialog(_conference));
+    }
+
+    /**
+     * Callback invoked to display {@code FeedbackDialog}.
+     *
+     * @private
+     * @returns {void}
+     */
+    _doOpenEmbedMeeting() {
+        this.props.dispatch(openDialog(EmbedMeetingDialog));
     }
 
     /**
@@ -541,10 +559,15 @@ class Toolbox extends Component<Props, State> {
      * @returns {void}
      */
     _onResize() {
-        const width = window.innerWidth;
+        let widthToUse = window.innerWidth;
 
-        if (this.state.windowWidth !== width) {
-            this.setState({ windowWidth: width });
+        // Take chat size into account when resizing toolbox.
+        if (this.props._chatOpen) {
+            widthToUse -= CHAT_SIZE;
+        }
+
+        if (this.state.windowWidth !== widthToUse) {
+            this.setState({ windowWidth: widthToUse });
         }
     }
 
@@ -713,6 +736,21 @@ class Toolbox extends Component<Props, State> {
         sendAnalytics(createToolbarEvent('shortcuts'));
 
         this._doOpenKeyboardShorcuts();
+    }
+
+    _onToolbarOpenEmbedMeeting: () => void;
+
+    /**
+     * Creates an analytics toolbar event and dispatches an action for opening
+     * the embed meeting modal.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToolbarOpenEmbedMeeting() {
+        sendAnalytics(createToolbarEvent('embed.meeting'));
+
+        this._doOpenEmbedMeeting();
     }
 
     _onToolbarOpenSpeakerStats: () => void;
@@ -964,7 +1002,6 @@ class Toolbox extends Component<Props, State> {
             _isModerator
         } = this.props;
 
-
         return [
             this._isProfileVisible()
                 && <OverflowMenuProfileItem
@@ -1017,6 +1054,13 @@ class Toolbox extends Component<Props, State> {
                     key = 'stats'
                     onClick = { this._onToolbarOpenSpeakerStats }
                     text = { t('toolbar.speakerStats') } />,
+            this._shouldShowButton('embedmeeting')
+            && <OverflowMenuItem
+                accessibilityLabel = { t('toolbar.accessibilityLabel.embedMeeting') }
+                icon = { IconCodeBlock }
+                key = 'embed'
+                onClick = { this._onToolbarOpenEmbedMeeting }
+                text = { t('toolbar.embedMeeting') } />,
             this._shouldShowButton('e2ee')
                 && <E2EEButton
                     key = 'e2ee'
@@ -1096,7 +1140,11 @@ class Toolbox extends Component<Props, State> {
                         } />
                 );
             case 'closedcaptions':
-                return <ClosedCaptionButton showLabel = { true } />;
+                return (
+                    <ClosedCaptionButton
+                        key = 'closed-captions'
+                        showLabel = { true } />
+                );
             case 'security':
                 return (
                     <SecurityDialogButton
@@ -1184,15 +1232,15 @@ class Toolbox extends Component<Props, State> {
             / 2 // divide by the number of groups(left and right group)
         );
 
+        if (this._shouldShowButton('chat')) {
+            buttonsLeft.push('chat');
+        }
         if (this._shouldShowButton('desktop')
                 && this._isDesktopSharingButtonVisible()) {
             buttonsLeft.push('desktop');
         }
         if (this._shouldShowButton('raisehand')) {
             buttonsLeft.push('raisehand');
-        }
-        if (this._shouldShowButton('chat')) {
-            buttonsLeft.push('chat');
         }
         if (this._shouldShowButton('closedcaptions')) {
             buttonsLeft.push('closedcaptions');
@@ -1249,15 +1297,6 @@ class Toolbox extends Component<Props, State> {
         return (
             <div className = 'toolbox-content'>
                 <div className = 'button-group-left'>
-                    { _isModerator && buttonsLeft.indexOf('desktop') !== -1
-                        && this._renderDesktopSharingButton() }
-                    { buttonsLeft.indexOf('raisehand') !== -1
-                        && <ToolbarButton
-                            accessibilityLabel = { t('toolbar.accessibilityLabel.raiseHand') }
-                            icon = { IconRaisedHand }
-                            onClick = { this._onToolbarToggleRaiseHand }
-                            toggled = { _raisedHand }
-                            tooltip = { t('toolbar.raiseHand') } /> }
                     { buttonsLeft.indexOf('chat') !== -1
                         && <div className = 'toolbar-button-with-badge'>
                             <ToolbarButton
@@ -1268,6 +1307,15 @@ class Toolbox extends Component<Props, State> {
                                 tooltip = { t('toolbar.chat') } />
                             <ChatCounter />
                         </div> }
+                    { _isModerator && buttonsLeft.indexOf('desktop') !== -1
+                        && this._renderDesktopSharingButton() }
+                    { buttonsLeft.indexOf('raisehand') !== -1
+                        && <ToolbarButton
+                            accessibilityLabel = { t('toolbar.accessibilityLabel.raiseHand') }
+                            icon = { IconRaisedHand }
+                            onClick = { this._onToolbarToggleRaiseHand }
+                            toggled = { _raisedHand }
+                            tooltip = { t('toolbar.raiseHand') } /> }
                     {
                         buttonsLeft.indexOf('closedcaptions') !== -1
                             && <ClosedCaptionButton />
@@ -1382,7 +1430,7 @@ function _mapStateToProps(state) {
         _feedbackConfigured: Boolean(callStatsID),
         _isGuest: state['features/base/jwt'].isGuest,
         _fullScreen: fullScreen,
-        _tileViewEnabled: state['features/video-layout'].tileViewEnabled,
+        _tileViewEnabled: shouldDisplayTileView(state),
         _localParticipantID: localParticipant.id,
         _localRecState: localRecordingStates,
         _locked: locked,
