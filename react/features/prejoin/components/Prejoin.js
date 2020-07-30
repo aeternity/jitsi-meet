@@ -237,7 +237,8 @@ class Prejoin extends Component<Props, State> {
             showDialog,
             isWalletNameSet,
             localParticipant,
-            t
+            t,
+            connectedToExtension
         } = this.props;
         let isParticipantEditable = true;
         let displayName = name;
@@ -262,8 +263,8 @@ class Prejoin extends Component<Props, State> {
 
                         <div>
                             <TipButton
-                                account = 'some.chain'
-                                connectedToExtension = { this.props.connectedToExtension } />
+                                account = 'some2.chain'
+                                connectedToExtension = { connectedToExtension } />
                         </div>
 
                         <CopyMeetingUrl />
@@ -342,7 +343,7 @@ class Prejoin extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state): Object {
-    console.log({ state: state['features/aeternity'] });
+    console.log({ state });
 
     return {
         isAnonymousUser: isGuest(state),
@@ -353,7 +354,7 @@ function mapStateToProps(state): Object {
         hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
         isWalletNameSet: isWalletNameSet(state),
         localParticipant: getLocalParticipant(state),
-        connectedToExtension: state['features/aeternity'] && state['features/aeternity'].hasWallet
+        connectedToExtension: state['features/aeternity'].hasWallet
     };
 }
 

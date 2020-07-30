@@ -100,7 +100,6 @@ class Conference extends AbstractConference<Props, *> {
     _onShowToolbar: Function;
     _originalOnShowToolbar: Function;
     _signAndReconnect: Function;
-    _scanForWallets: Function;
 
     /**
      * Initializes a new Conference instance.

@@ -12,7 +12,7 @@ import {
 } from '../../../aeternity';
 import { createDeepLinkUrl } from '../../../base/util/createDeepLinkUrl';
 
-// import iconTip from './iconTip.svg';
+import IconTip from './iconTip.svg';
 
 type Props = {
 
@@ -279,7 +279,10 @@ class TipButton extends Component<Props, State> {
                 {this.props.connectedToExtension
                     ? 'walletReady and use sdk tip'
                     : 'wallet is not ready and use web wallet'}
-                {/* <img src = { iconTip } /> */}
+                <div className = 'IconTip' >
+                    <IconTip />
+                </div>
+                {/* <img src = { IconTip } alt="IconTip" /> */}
                 <button onClick = { this._onTipDeepLink }>
                     Deep link Tip
                 </button>

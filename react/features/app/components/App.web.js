@@ -30,7 +30,13 @@ import { AbstractApp } from './AbstractApp';
  * @extends AbstractApp
  */
 export class App extends AbstractApp {
-
+    /**
+     *
+     */
+    constructor(props) {
+        super(props);
+        this._scanForWallets = this._scanForWallets.bind(this);
+    }
     /**
      * Initializes the app.
      *

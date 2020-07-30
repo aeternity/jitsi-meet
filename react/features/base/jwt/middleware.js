@@ -1,7 +1,7 @@
 // @flow
 
 import jwtDecode from 'jwt-decode';
-// import { jitsiLocalStorage } from 'js-utils';
+import { jitsiLocalStorage } from 'js-utils';
 
 import { SET_CONFIG } from '../config';
 import { SET_LOCATION_URL } from '../connection';
@@ -156,7 +156,7 @@ function _setJWT(store, next, action) {
                 }
             }
 
-            // jitsiLocalStorage.setItem('token', jwt);
+            jitsiLocalStorage.setItem('features/base/jwt', jwt);
         } else if (typeof APP === 'undefined') {
             // The logic of restoring JWT overrides make sense only on mobile.
             // On Web it should eventually be restored from storage, but there's
