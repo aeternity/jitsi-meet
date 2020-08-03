@@ -8,6 +8,7 @@ import React from 'react';
 
 import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
 import { client, initClient } from '../../../../client';
+import { walletFound } from '../../../aeternity';
 import { getConferenceNameForTitle } from '../../../base/conference';
 import { connect, disconnect } from '../../../base/connection';
 import { translate } from '../../../base/i18n';
@@ -146,12 +147,18 @@ class Conference extends AbstractConference<Props, *> {
      */
     componentDidMount() {
         document.title = `${this.props._roomName} | ${interfaceConfig.APP_NAME}`;
+        const { ENABLE_SUPERHERO } = interfaceConfig;
+        const { address: addressParam, signature: signatureParam } = parseURLParams(window.location, true, 'search');
 
-        initClient().then(() => {
-            this._scanForWallets();
-        });
+        if (!ENABLE_SUPERHERO) {
+            return this._start();
+        }
 
-        const { signature: signatureParam, address: addressParam } = parseURLParams(window.location, true, 'search');
+        if (!addressParam && !signatureParam) {
+            initClient().then(() => {
+                this._scanForWallets();
+            });
+        }
 
         if (addressParam) {
             const message = `I would like to generate JWT token at ${new Date().toUTCString()}`;
@@ -164,17 +171,13 @@ class Conference extends AbstractConference<Props, *> {
 
             jitsiLocalStorage.setItem('address', addressParam);
             jitsiLocalStorage.setItem('message', message);
-
             window.location = signLink;
-        }
+        } else if (signatureParam) {
+            const addressStorage = jitsiLocalStorage.getItem('address');
+            const messageStorage = jitsiLocalStorage.getItem('message');
 
-        const addressStorage = jitsiLocalStorage.getItem('address');
-        const messageStorage = jitsiLocalStorage.getItem('message');
-
-        if (signatureParam && addressStorage && messageStorage) {
             this._sign(signatureParam, addressStorage, messageStorage);
         }
-
         this._start();
     }
 
@@ -277,7 +280,6 @@ class Conference extends AbstractConference<Props, *> {
         detector.scan(async ({ newWallet }) => {
             if (newWallet) {
                 detector.stopScan();
-                this.setState({ showDeeplink: true });
                 await client.connectToWallet(await newWallet.getConnection());
                 await client.subscribeAddress('subscribe', 'current');
                 this._sign();
@@ -313,8 +315,10 @@ class Conference extends AbstractConference<Props, *> {
             })
         })).text();
 
+        // if user will click the "reject" button the code will stops before that line
         this.props.dispatch(setJWT(token));
         this.setState({ showDeeplink: false });
+        APP.store.dispatch(walletFound());
     }
 
     /**

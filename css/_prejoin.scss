@@ -47,6 +47,7 @@
         &--secondary {
             background: #2A3A4B;
             border: 1px solid #5E6D7A;
+            margin-top: 5px;
         }
 
         &--text {
@@ -132,7 +133,7 @@
     width: 100%;
 
     &--no-video {
-        background: radial-gradient(50% 50% at 50% 50%, #5B6F80 0%, #365067 100%), #FFFFFF;
+        background: $hangupColor;
         text-align: center;
     }
 
@@ -147,6 +148,8 @@
         color: #fff;
         font-size: 19px;
         line-height: 28px;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
 
         &--editable {
             background: none;
