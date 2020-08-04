@@ -74,7 +74,8 @@ class StatusIndicators extends Component<Props> {
             showAudioMutedIndicator,
             showVideoMutedIndicator,
             _akAddress,
-            _local
+            _local,
+            participantID
         } = this.props;
         let tooltipPosition;
 
@@ -89,8 +90,6 @@ class StatusIndicators extends Component<Props> {
             tooltipPosition = 'top';
         }
 
-        debugger;
-
         return (
             <div>
                 { showAudioMutedIndicator ? <AudioMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
@@ -99,8 +98,11 @@ class StatusIndicators extends Component<Props> {
                 { !_local
                     && _akAddress
                     && <div className = 'tip-block'>
-                        <TipButton
-                            account = { _akAddress } />
+                        <div className = 'tip-icon' >
+                            <TipButton
+                                account = { _akAddress }
+                                participantID = { participantID } />
+                        </div>
                     </div> }
             </div>
         );
@@ -128,8 +130,8 @@ function _mapStateToProps(state, ownProps) {
         _currentLayout: getCurrentLayout(state),
         _showModeratorIndicator:
             !interfaceConfig.DISABLE_FOCUS_INDICATOR && participant && participant.role === PARTICIPANT_ROLE.MODERATOR,
-        _akAddress: participant.akAddress,
-        _local: participant.local,
+        _akAddress: participant && participant.akAddress,
+        _local: participant && participant.local,
         hasWallet: state['features/aeternity'].hasWallet
     };
 }
