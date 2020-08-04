@@ -8,7 +8,6 @@ import { Popover } from '../../../base/popover';
 import { connect } from '../../../base/redux';
 
 import PinButton from './PinButton';
-import TipButton from './TipButton';
 
 import {
     MuteButton,
@@ -220,14 +219,6 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
                     onClick = { onRemoteControlToggle }
                     participantID = { participantID }
                     remoteControlState = { remoteControlState } />
-            );
-        }
-
-        if (_enableTip) {
-            buttons.push(
-                <TipButton
-                    key = 'tip'
-                    participantID = { participantID } />
             );
         }
 

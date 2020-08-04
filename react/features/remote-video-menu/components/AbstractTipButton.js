@@ -75,7 +75,6 @@ export default class AbstractTipButton extends AbstractButton<Props, *> {
      * @returns {void}
      */
     _handleClick() {
-        debugger;
         if (this.props.hasWallet) {
             const { dispatch, participantID } = this.props;
 

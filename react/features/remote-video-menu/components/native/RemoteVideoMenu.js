@@ -15,7 +15,6 @@ import { hideRemoteVideoMenu } from '../../actions';
 import KickButton from './KickButton';
 import MuteButton from './MuteButton';
 import PinButton from './PinButton';
-import TipButton from './TipButton';
 import styles from './styles';
 
 declare var interfaceConfig: Object;
@@ -96,10 +95,6 @@ class RemoteVideoMenu extends Component<Props> {
         };
 
         const buttons = [];
-
-        if (_enableTip) {
-            buttonProps.push(<TipButton { ...buttonProps } />);
-        }
 
         if (!_disableRemoteMute) {
             buttons.push(<MuteButton { ...buttonProps } />);

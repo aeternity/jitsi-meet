@@ -89,19 +89,18 @@ class StatusIndicators extends Component<Props> {
             tooltipPosition = 'top';
         }
 
+        debugger;
+
         return (
             <div>
                 { showAudioMutedIndicator ? <AudioMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
                 { showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
                 { _showModeratorIndicator ? <ModeratorIndicator tooltipPosition = { tooltipPosition } /> : null }
-                { !_local && _akAddress
+                { !_local
+                    && _akAddress
                     && <div className = 'tip-block'>
                         <TipButton
-                            account = { _akAddress }
-                            hasWallet = { this.props.hasWallet }
-                            theme = {{
-                                place: 'aside'
-                            }} />
+                            account = { _akAddress } />
                     </div> }
             </div>
         );
@@ -125,11 +124,6 @@ function _mapStateToProps(state, ownProps) {
     // Only the local participant won't have id for the time when the conference is not yet joined.
     const participant = participantID ? getParticipantById(state, participantID) : getLocalParticipant(state);
 
-    console.log({
-        _akAddress: participant.akAddress,
-        _local: participant.local
-    });
-
     return {
         _currentLayout: getCurrentLayout(state),
         _showModeratorIndicator:
@@ -137,7 +131,6 @@ function _mapStateToProps(state, ownProps) {
         _akAddress: participant.akAddress,
         _local: participant.local,
         hasWallet: state['features/aeternity'].hasWallet
-
     };
 }
 

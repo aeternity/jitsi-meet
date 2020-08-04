@@ -5,6 +5,7 @@ import React from 'react';
 import { isAccountOrChainName } from '../../../aeternity';
 import { translate } from '../../../base/i18n';
 import { IconTip } from '../../../base/icons/svg';
+import TipIcon from '../../../base/icons/svg/tip.svg';
 import { getParticipantDisplayName } from '../../../base/participants';
 import { connect } from '../../../base/redux';
 import AbstractTipButton, {
@@ -38,6 +39,10 @@ class TipButton extends AbstractTipButton {
         this._handleClick = this._handleClick.bind(this);
     }
 
+    static defaultProps = {
+        list: false
+    }
+
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -54,13 +59,15 @@ class TipButton extends AbstractTipButton {
         }
 
         return (
-            <RemoteVideoMenuButton
+            this.props.list ? <RemoteVideoMenuButton
                 buttonText = { t('videothumbnail.tip') }
                 displayClass = 'tiplink'
                 icon = { IconTip }
                 id = { `tiplink_${participantID}` }
                 // eslint-disable-next-line react/jsx-handler-names
                 onClick = { this._handleClick } />
+                // eslint-disable-next-line react/jsx-handler-names
+                : <TipIcon onClick = { this._handleClick } />
         );
     }
 
