@@ -319,6 +319,14 @@ class Conference extends AbstractConference<Props, *> {
         this.props.dispatch(setJWT(token));
         this.setState({ showDeeplink: false });
         APP.store.dispatch(walletFound());
+
+        if (APP.conference.isJoined()) {
+            await APP.conference.leaveRoomAndDisconnect();
+            APP.UI.unbindEvents();
+            FULL_SCREEN_EVENTS.forEach(name =>
+                document.removeEventListener(name, this._onFullScreenChange));
+            this._start();
+        }
     }
 
     /**
