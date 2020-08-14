@@ -279,6 +279,7 @@ class Conference extends AbstractConference<Props, *> {
 
         detector.scan(async ({ newWallet }) => {
             if (newWallet) {
+                console.log({ newWallet });
                 detector.stopScan();
                 await client.connectToWallet(await newWallet.getConnection());
                 await client.subscribeAddress('subscribe', 'current');
