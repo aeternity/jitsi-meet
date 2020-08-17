@@ -1,41 +1,41 @@
-import { Node as node, Universal as universalSDK, MemoryAccount as memoryAccount } from '@aeternity/aepp-sdk/es';
+import {
+    Node,
+    Universal,
+    MemoryAccount,
+    RpcAepp,
+} from '@aeternity/aepp-sdk/es';
+import BrowserWindowMessageConnection from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/connection/browser-window-message';
+import Detector from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/wallet-detector';
 
-export let client;
-export let staticClient;
-
-const NODE_URL = 'https://mainnet.aeternity.io';
 const TESTNET_URL = 'https://testnet.aeternity.io';
+const MAINNET_URL = 'https://mainnet.aeternity.io';
 const COMPILER_URL = 'https://latest.compiler.aepps.com';
 
-export const initClient = async () => {
+const aeternity = {
+    rpcClient: null,
+    client: null,
+    networkId: null,
+    static: true,
+};
 
-    client = await universalSDK({
-        name: 'Superhero-league',
-        nodes: [ {
-            name: 'mainnet',
-            instance: await node({
-                url: NODE_URL
-            }) }, {
-            name: 'test-net',
-            instance: await node({
-                url: TESTNET_URL
-                // internalUrl: NODE_INTERNAL_URL
-            })
-        } ],
-        compilerUrl: COMPILER_URL,
-        accounts: [
-            memoryAccount({
-                keypair: {
-                    secretKey: process.env.PRIVATE_KEY,
-                    publicKey: process.env.PUBLIC_KEY
-                }
-            })
-        ]
-    });
-
-    staticClient = false;
-    return initProvider(true);
-
+aeternity.initProvider = async (changedClient = false) => {
+    try {
+        const networkId = (await aeternity.client.getNodeInfo()).nodeNetworkId;
+        const changedNetwork = aeternity.networkId !== networkId;
+        aeternity.networkId = networkId;
+        // aeternity.contract = await aeternity.client.getContractInstance(
+        //     registryContractSource,
+        //     { contractAddress: settings[aeternity.networkId].contractAddress }
+        // );
+        if (changedClient || changedNetwork) {
+            // EventBus.$emit("networkChange");
+            // EventBus.$emit("dataChange");
+        }
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
 };
 
 /**
@@ -43,19 +43,146 @@ export const initClient = async () => {
  * This client can not sign transactions that require funds (everything except static contract calls)
  * @returns {Promise<*>}
  */
+aeternity.initStaticClient = async () => {
+    aeternity.static = true;
 
-export const initStaticClient = async () => {
-    staticClient = true;
-
-    return universalSDK({
-        nodes: [ {
-            name: 'mainnet',
-            instance: await node({
-                url: NODE_URL
-            })
-        } ],
-        compilerUrl: COMPILER_URL
+    // TESTNET
+    /*
+  return Universal({
+    compilerUrl: COMPILER_URL,
+    nodes: [
+      {
+        name: 'testnet',
+        instance: await Node({
+          url: TESTNET_URL,
+        }),
+      }],
+  });
+  // MAINNET
+  */
+    return Universal({
+        compilerUrl: COMPILER_URL,
+        nodes: [
+            {
+                name: "mainnet",
+                instance: await Node({
+                    url: MAINNET_URL,
+                }),
+            },
+        ],
     });
 };
 
-export const hasActiveWallet = () => Boolean(client);
+/**
+ * Returns true if a client has been initialized.
+ * Used to check after switching pages if the initialization was already done.
+ * @returns {boolean}
+ */
+aeternity.hasActiveWallet = () => Boolean(aeternity.client);
+
+/**
+ * Checks if the initialized client is connected to the ae-mainnet
+ * @returns {boolean}
+ */
+aeternity.isMainnet = () => {
+    return aeternity.networkId === "ae_mainnet";
+};
+
+/**
+ * Initializes the aeternity sdk to be imported in other occasions
+ * @returns {Promise<boolean>}
+ */
+aeternity.initClient = async () => {
+    if (
+        process &&
+        process.env &&
+        process.env.PRIVATE_KEY &&
+        process.env.PUBLIC_KEY
+    ) {
+        aeternity.client = await Universal({
+            nodes: [
+                { name: "testnet", instance: await Node({ url: TESTNET_URL }) },
+            ],
+            compilerUrl: COMPILER_URL,
+            accounts: [
+                MemoryAccount({
+                    keypair: {
+                        secretKey: process.env.PRIVATE_KEY,
+                        publicKey: process.env.PUBLIC_KEY,
+                    },
+                }),
+            ],
+        });
+        aeternity.static = false;
+        return;
+    }
+
+    if (!aeternity.client) {
+        aeternity.client = await aeternity.initStaticClient();
+    }
+    return;
+};
+
+// not used
+aeternity.disconnect = async () => {
+    await aeternity.rpcClient.disconnectWallet();
+    await aeternity.scanForWallets();
+};
+
+// not used
+aeternity.getReverseWindow = () => {
+    const iframe = document.createElement("iframe");
+    iframe.src = "https://base.aepps.com/";
+    //iframe.src = 'https://localhost:8080/';
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return iframe.contentWindow;
+};
+
+aeternity.scanForWallets = async (successCallback) => {
+    const scannerConnection = await BrowserWindowMessageConnection({
+        connectionInfo: { id: "spy" },
+    });
+    const detector = await Detector({ connection: scannerConnection });
+    const handleWallets = async function ({ wallets, newWallet }) {
+        detector.stopScan();
+        const connected = await aeternity.rpcClient.connectToWallet(
+            await newWallet.getConnection()
+        );
+        aeternity.client.rpcClient.selectNode(connected.networkId); // connected.networkId needs to be defined as node in RpcAepp
+        await aeternity.rpcClient.subscribeAddress("subscribe", "current");
+        aeternity.client = aeternity.rpcClient;
+        aeternity.static = false;
+        successCallback();
+    };
+
+    detector.scan(handleWallets);
+};
+
+aeternity.initWalletSearch = async (successCallback) => {
+    // Open iframe with Wallet if run in top window
+    // window !== window.parent || await aeternity.getReverseWindow();
+
+    aeternity.rpcClient = await RpcAepp({
+        name: "Superhero-meet",
+        nodes: [
+            { name: "ae_mainnet", instance: await Node({ url: MAINNET_URL }) },
+            { name: "ae_uat", instance: await Node({ url: TESTNET_URL }) },
+        ],
+        compilerUrl: COMPILER_URL,
+        onNetworkChange(params) {
+            this.selectNode(params.networkId); // params.networkId needs to be defined as node in RpcAepp
+            aeternity.initProvider();
+        },
+        onAddressChange(addresses) {
+            if (!addresses.current[aeternity.address]) {
+                // EventBus.$emit("addressChange");
+                // EventBus.$emit("dataChange");
+            }
+        },
+    });
+
+    await aeternity.scanForWallets(successCallback);
+};
+
+export default aeternity;

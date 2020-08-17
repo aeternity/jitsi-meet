@@ -7,7 +7,7 @@ import _ from 'lodash';
 import React from 'react';
 
 import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
-import { client, initClient } from '../../../../client';
+import aeternity from '../../../../client';
 import { walletFound } from '../../../aeternity';
 import { getConferenceNameForTitle } from '../../../base/conference';
 import { connect, disconnect } from '../../../base/connection';
@@ -108,7 +108,6 @@ class Conference extends AbstractConference<Props, *> {
     _onShowToolbar: Function;
     _originalOnShowToolbar: Function;
     _sign: Function;
-    _scanForWallets: Function;
 
     /**
      * Initializes a new Conference instance.
@@ -137,7 +136,6 @@ class Conference extends AbstractConference<Props, *> {
         // Bind event handler so it is only bound once for every instance.
         this._onFullScreenChange = this._onFullScreenChange.bind(this);
         this._sign = this._sign.bind(this);
-        this._scanForWallets = this._scanForWallets.bind(this);
     }
 
     /**
@@ -155,8 +153,8 @@ class Conference extends AbstractConference<Props, *> {
         }
 
         if (!addressParam && !signatureParam) {
-            initClient().then(() => {
-                this._scanForWallets();
+            aeternity.initClient().then(() => {
+                aeternity.initWalletSearch(this._sign);
             });
         }
 
@@ -265,33 +263,6 @@ class Conference extends AbstractConference<Props, *> {
     /**
      * Start to search the wallet with sdk.
      *
-     * @private
-     * @returns {void}
-     *
-     */
-    async _scanForWallets() {
-        const connection = await browserWindowMessageConnection({
-            connectionInfo: { id: 'spy' }
-        });
-
-        // eslint-disable-next-line new-cap
-        const detector = await Detector({ connection });
-
-        detector.scan(async ({ newWallet }) => {
-            if (newWallet) {
-                console.log({ newWallet });
-                detector.stopScan();
-                await client.connectToWallet(await newWallet.getConnection());
-                await client.subscribeAddress('subscribe', 'current');
-                this._sign();
-            }
-        });
-
-    }
-
-    /**
-     * Start to search the wallet with sdk.
-     *
      * @param {string} signatureParam - Signature from the query string.
      * @param {string} addressParam - Address from the query string.
      * @param {string} messageParam - Message from the query string.
@@ -301,8 +272,8 @@ class Conference extends AbstractConference<Props, *> {
      */
     async _sign(signatureParam, addressParam, messageParam) {
         const message = messageParam || `I would like to generate JWT token at ${new Date().toUTCString()}`;
-        const signature = signatureParam || await client.signMessage(message);
-        const address = addressParam || client.rpcClient.getCurrentAccount();
+        const signature = signatureParam || await aeternity.client.signMessage(message);
+        const address = addressParam || aeternity.client.rpcClient.getCurrentAccount();
 
         const token = await (await fetch('https://jwt.z52da5wt.xyz/claim', {
             method: 'POST',
@@ -319,7 +290,7 @@ class Conference extends AbstractConference<Props, *> {
         // if user will click the "reject" button the code will stops before that line
         this.props.dispatch(setJWT(token));
         this.setState({ showDeeplink: false });
-        APP.store.dispatch(walletFound());
+        this.props.dispatch(walletFound());
     }
 
     /**
