@@ -10,6 +10,11 @@ import { getActiveVideoTrack, isPrejoinVideoMuted } from '../../functions';
 export type Props = {
 
     /**
+     * Participant id.
+     */
+    participantId: string,
+
+    /**
      * The name of the user that is about to join.
      */
     name: string,
@@ -33,6 +38,7 @@ export type Props = {
  */
 function Preview(props: Props) {
     const {
+        participantId,
         name,
         showCameraPreview,
         videoTrack
@@ -53,6 +59,7 @@ function Preview(props: Props) {
     return (
         <div className = 'prejoin-preview prejoin-preview--no-video'>
             <Avatar
+                participantId = { participantId }
                 className = 'prejoin-preview-avatar'
                 displayName = { name }
                 size = { 200 } />
@@ -68,6 +75,7 @@ function Preview(props: Props) {
  */
 function mapStateToProps(state) {
     return {
+        participantId: state['features/large-video'].participantId,
         videoTrack: getActiveVideoTrack(state),
         showCameraPreview: !isPrejoinVideoMuted(state)
     };

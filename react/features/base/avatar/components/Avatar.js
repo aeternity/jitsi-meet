@@ -10,6 +10,15 @@ import { getAvatarColor, getInitials } from '../functions';
 import { StatelessAvatar } from '.';
 
 export type Props = {
+    /**
+     * TestId of the element, if any.
+     */
+    testId?: string,
+
+    /**
+     * Is user has akAddress.
+     */
+    akAddress: ?string,
 
     /**
      * The string we base the initials on (this is generated from a list of precendences).
@@ -115,6 +124,8 @@ class Avatar<P: Props> extends PureComponent<P, State> {
      */
     render() {
         const {
+            testId,
+            akAddress,
             _initialsBase,
             _loadableAvatarUrl,
             className,
@@ -127,6 +138,9 @@ class Avatar<P: Props> extends PureComponent<P, State> {
         const { avatarFailed } = this.state;
 
         const avatarProps = {
+            testId,
+            fullName: _initialsBase,
+            akAddress,
             className,
             color: undefined,
             id,
@@ -134,8 +148,7 @@ class Avatar<P: Props> extends PureComponent<P, State> {
             onAvatarLoadError: undefined,
             size,
             status,
-            url: undefined,
-            fullName: _initialsBase
+            url: undefined
         };
 
         // _loadableAvatarUrl is validated that it can be loaded, but uri (if present) is not, so
@@ -187,6 +200,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
     const _participant: ?Object = participantId && getParticipantById(state, participantId);
     const _initialsBase = _participant?.name ?? displayName;
     const screenShares = state['features/video-layout'].screenShares || [];
+    const akAddress = _participant?.akAddress;
 
     let _loadableAvatarUrl = _participant?.loadableAvatarUrl;
 
@@ -195,6 +209,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
     }
 
     return {
+        akAddress,
         _initialsBase,
         _loadableAvatarUrl,
         colorBase: !colorBase && _participant ? _participant.id : colorBase

@@ -5,8 +5,8 @@ import BigNumber from 'bignumber.js';
 import React, { Component } from 'react';
 import TIPPING_INTERFACE from 'superhero-utls/src/contracts/TippingInterface.aes';
 
-// base/util/createDeepLinkUrl
 import { client } from '../../../client';
+import { translate } from '../../base/i18n';
 import TipIcon from '../../base/icons/svg/tip.svg';
 import { createDeepLinkUrl } from '../../base/util/createDeepLinkUrl';
 import {
@@ -36,6 +36,11 @@ type Props = {
      * Tile view or vertical filmstrip
      */
     layout: string,
+
+    /**
+     * Used for translation
+     */
+    t: Function
 };
 
 type State = {
@@ -69,6 +74,11 @@ type State = {
      * Message for the author
      */
     message: string,
+
+    /**
+     * Display this message if transaction is successful
+     */
+    success: string,
 };
 
 const URLS = {
@@ -120,6 +130,7 @@ class TipButton extends Component<Props, State> {
             message: `Appreciation from conference : ${room} on ${window.location.host}.`,
             error: '',
             showLoading: false,
+            success: ''
         };
 
         this._changeCurrency = this._changeCurrency.bind(this);
@@ -131,10 +142,15 @@ class TipButton extends Component<Props, State> {
         this._onTipDeepLink = this._onTipDeepLink.bind(this);
     }
 
-    static defaultProps = {
-        theme: {
-            place: 'chat'
-        }
+    /**
+     * Implements {@code Component#componentDidUpdate}.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate() {
+        this.state.isOpen
+            ? document.addEventListener('click', this._onToggleTooltip)
+            : document.removeEventListener('click', this._onToggleTooltip);
     }
 
     /**
@@ -151,14 +167,18 @@ class TipButton extends Component<Props, State> {
     /**
      * Toggle tooltip.
      *
-     * @param {string} currency - New currency.
+     * @param {Object} event - Event object.
      * @returns {void}
      */
     _onToggleTooltip(event) {
         const tipRegExp = /tip/;
-        const isModal = tipRegExp.test(event.target.className);
+        const isTip = tipRegExp.test(event.target.className);
 
-        isModal ? null : this.setState({ isOpen: !this.state.isOpen });
+        if (isTip) {
+            return;
+        }
+
+        this.setState({ isOpen: !this.state.isOpen });
     }
 
     /**
@@ -168,10 +188,20 @@ class TipButton extends Component<Props, State> {
      * @returns {void}
      */
     _onChangeValue({ target: { value } }) {
-        const validationRegExp = /^\d*\.?\d*/;
-        const result = value.match(validationRegExp);
+        const validationRegExp = /^\d+\.?\d*$/;
+        const [ result ] = value.match(validationRegExp) ?? [];
 
-        result ? this.setState({ value: result[0] }) : null;
+        if (result?.endsWith('.')) {
+            this.setState({ value: result });
+
+            return;
+        } else if (!value) {
+            this.setState({ value: '' });
+
+            return;
+        }
+
+        result ? this.setState({ value: Number(result) }) : this.setState({ value: this.state.value });
     }
 
     /**
@@ -214,9 +244,10 @@ class TipButton extends Component<Props, State> {
         signCb,
         parentId = ''
     }) {
-        // todo: move to onChange
+        const { t } = this.props;
+
         if (!isAccountOrChainName(author)) {
-            this.setState({ error: 'value is not account or chain name' });
+            this.setState({ error: t('tipping.error.invalidAccount') });
 
             return;
         }
@@ -249,28 +280,18 @@ class TipButton extends Component<Props, State> {
      * @returns {void}
      */
     async _onSendTip() {
-        if (!this.props.account) {
-            return;
-        }
-
-        const { value } = this.state;
-
-        if (value[value.length - 1] === '.') {
-            this.setState({ error: 'The last character shouldn\'t be \' . \'' });
-
-            return;
-        }
-
+        const { t } = this.props;
         const amount = aeternity.util.aeToAtoms(this.state.value);
         const url = `${URLS.SUPER}/user-profile/${this.props.account}`;
 
         try {
             this.setState({ showLoading: true });
             await aeternity.tip(url, this.state.message, amount);
+            this.setState({ success: t('tipping.success') });
         } catch (e) {
             // todo: translates
             console.log({ e });
-            this.setState({ error: 'An error occurred while sending the tip. Please try again later' });
+            this.setState({ error: t('tipping.error.tippingFailed') });
         } finally {
             this.setState({ showLoading: false });
         }
@@ -305,48 +326,9 @@ class TipButton extends Component<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const { isOpen, error, showLoading, value } = this.state;
+        const { isOpen, error, showLoading, value, success } = this.state;
         const { hasWallet, layout } = this.props;
-
-        if (layout) {
-            return (
-                <div className = 'tip-component'>
-                    {hasWallet ? <>
-                        <div className = 'tip-icon' >
-                            <TipIcon onClick = { this._onToggleTooltip } />
-                        </div>
-                        {isOpen && (
-                            <div className = 'modal'>
-                                <div className = 'modal-dialog'>
-                                    <div className = 'modal-content'>
-                                        <div
-                                            className = 'modal-body'
-                                            onClick = { this._onToggleTooltip }>
-                                            <div className = 'tip-container'>
-                                                {!showLoading && error && <div className = 'tip-error'> {error} </div>}
-                                                <div className = 'tip-wrapper'>
-                                                    <input
-                                                        className = 'tip-input'
-                                                        onChange = { this._onChangeValue }
-                                                        placeholder = 'Amount'
-                                                        type = 'text'
-                                                        value = { value } />
-                                                    <button
-                                                        className = 'tip-button'
-                                                        onClick = { this._onSendTip }>Tip</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </> : <div className = 'tip-icon' >
-                        <TipIcon onClick = { this._onTipDeepLink } />
-                    </div>}
-                </div>
-            );
-        }
+        const isNotValidValue = String(value).endsWith('.');
 
         return (
             <div className = 'tip-component'>
@@ -355,8 +337,17 @@ class TipButton extends Component<Props, State> {
                         <TipIcon onClick = { this._onToggleTooltip } />
                     </div>
                     {isOpen && (
-                        <div className = { `tip-container tip-container__${this.props.theme.place}` } >
+                        <div className = { `tip-container tip-container__${layout}` } >
                             {!showLoading && error && <div className = 'tip-error'> {error} </div>}
+                            {!showLoading && !error && success && <div className = 'tip-success'> {success} </div>}
+                            {showLoading && <div className = 'tip-loader'>
+                                <div className = 'lds-ellipsis'>
+                                    <div />
+                                    <div />
+                                    <div />
+                                    <div />
+                                </div>
+                            </div>}
                             <div className = 'tip-wrapper'>
                                 <input
                                     className = 'tip-input'
@@ -366,6 +357,7 @@ class TipButton extends Component<Props, State> {
                                     value = { value } />
                                 <button
                                     className = 'tip-button'
+                                    disabled = { !value || showLoading || isNotValidValue }
                                     onClick = { this._onSendTip }>Tip</button>
                             </div>
                         </div>
@@ -378,4 +370,4 @@ class TipButton extends Component<Props, State> {
     }
 }
 
-export default TipButton;
+export default translate(TipButton);

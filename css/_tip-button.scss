@@ -3,17 +3,26 @@
     border-radius: 0.5rem;
     max-width: 320px;
     padding: 1rem;
-    position: absolute;
+    position: fixed;
     z-index: 10;
     box-sizing: border-box;
 
-    .tip-error {
+    .tip-error,
+    .tip-loader,
+    .tip-success {
         margin-bottom: 0.5rem;
-        color: $toolBoxIconBorderColor;
         font-size: 0.75rem;
         text-align: center;
         white-space: normal;
         font-weight: 400;
+    }
+
+    .tip-error {
+        color: $toolBoxIconBorderColor;
+    }
+
+    .tip-success {
+        color: $popupMenuSliderBackground;
     }
 
     .tip-wrapper {
@@ -30,6 +39,7 @@
         border-radius: 0.25rem;
         height: 2rem;
         flex: 1;
+        outline: none;
 
         &:focus {
             border: $tipInputFocusedBorder;
@@ -49,6 +59,12 @@
         font-size: 15px;
         font-weight: bold;
         margin-left: 0.5rem;
+        outline: none;
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: auto;
+        }
     }
 }
 
@@ -61,46 +77,90 @@
     }
 }
 
-.tip-container {
-    &.tip-container__chat {
-        left: 20%;
-        top: 100%;
-    }
-    &.tip-container__aside {
-        top: -80px;
-        right: 0;
+#filmstripRemoteVideosContainer span:first-child {
+    .tip-container__vertical-filmstrip-view {
+        bottom: 15%;
     }
 }
 
-.modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 9000;
-    opacity: 1;
-    margin: 0;
-    padding: 0;
+.tip-container {
+    &.tip-container__chat,
+    &.tip-container__tile-view {
+        left: 20%;
+    }
 
-    .modal-dialog {
-        position: relative;
-        width: auto;
-        height: 100%;
+    &.tip-container__tile-view {
+        bottom: 10%;
+    }
 
-        .modal-content {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+    &.tip-container__vertical-filmstrip-view {
+        right: 10%;
+    }
+}
 
-            .modal-body {
-                position: relative;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-            }
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+
+    div {
+        position: absolute;
+        top: 33px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: $popupMenuSliderBackground;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+
+        &:nth-child(1) {
+            left: 8px;
+            animation: lds-ellipsis1 0.6s infinite;
         }
+
+        &:nth-child(2) {
+            left: 8px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+
+        &:nth-child(3) {
+            left: 32px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+
+        &:nth-child(4) {
+            left: 56px;
+            animation: lds-ellipsis3 0.6s infinite;
+        }
+    }
+}
+
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(24px, 0);
     }
 }
