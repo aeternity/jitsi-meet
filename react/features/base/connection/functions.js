@@ -22,8 +22,6 @@ export function getCurrentConferenceUrl(stateful: Function | Object) {
 
     // Check if the URL doesn't end with a slash
     if (currentUrl && currentUrl.substr(-1) === '/') {
-        console.log({ currentUrl });
-        console.log(123123);
         currentUrl = undefined;
     }
 
