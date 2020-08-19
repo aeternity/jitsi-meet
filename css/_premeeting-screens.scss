@@ -151,10 +151,14 @@
             outline-width: 0;
             padding: 8px 0;
             text-align: center;
-            width: 100%;
+            width: 90%;
             outline: none;
             overflow-x: hidden;
             text-overflow: ellipsis;
+
+            &:only-child {
+                width: 100%
+            }
 
             &.focused {
                 border-bottom: 1px solid white;
