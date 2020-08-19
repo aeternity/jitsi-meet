@@ -15,6 +15,7 @@ export {
     setLocationURL
 } from './actions.native';
 import logger from './logger';
+import { SET_PARENT_LOCATION } from './actionTypes';
 
 /**
  * Opens new connection.
@@ -48,4 +49,11 @@ export function disconnect(requestFeedback: boolean = false) {
     // XXX For web based version we use conference hanging up logic from the old
     // app.
     return () => APP.conference.hangup(requestFeedback);
+}
+
+export function setParentLocationURL(locationURL: ?URL) {
+    return {
+        type: SET_PARENT_LOCATION,
+        locationURL
+    };
 }

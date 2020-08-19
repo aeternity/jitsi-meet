@@ -22,6 +22,8 @@ export function getCurrentConferenceUrl(stateful: Function | Object) {
 
     // Check if the URL doesn't end with a slash
     if (currentUrl && currentUrl.substr(-1) === '/') {
+        console.log({ currentUrl });
+        console.log(123123);
         currentUrl = undefined;
     }
 
@@ -40,12 +42,14 @@ export function getCurrentConferenceUrl(stateful: Function | Object) {
  * @returns {string}
  */
 export function getInviteURL(stateOrGetState: Function | Object): string {
+    const state = toState(stateOrGetState);
+
     if (isInIframe()) {
-        // TODO: fix error URI is undefined
-        return 'http://localhost:8081/meet/asdasdasd';//document.referrer;
+        return state instanceof URL
+            ? state
+            : state['features/base/connection'].parentUrl;
     }
 
-    const state = toState(stateOrGetState);
     let locationURL
         = state instanceof URL
             ? state

@@ -9,7 +9,8 @@ import {
     CONNECTION_ESTABLISHED,
     CONNECTION_FAILED,
     CONNECTION_WILL_CONNECT,
-    SET_LOCATION_URL
+    SET_LOCATION_URL,
+    SET_PARENT_LOCATION
 } from './actionTypes';
 import type { ConnectionFailedError } from './actions.native';
 
@@ -37,6 +38,9 @@ ReducerRegistry.register(
 
         case SET_ROOM:
             return _setRoom(state);
+
+        case SET_PARENT_LOCATION:
+            return _setParentLocation(state, action);
         }
 
         return state;
@@ -193,5 +197,11 @@ function _setRoom(state: Object) {
     return assign(state, {
         error: undefined,
         passwordRequired: undefined
+    });
+}
+
+function _setParentLocation(state: Object, { url: parentUrl }) {
+    return assign(state, {
+        parentUrl,
     });
 }
