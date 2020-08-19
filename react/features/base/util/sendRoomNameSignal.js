@@ -3,7 +3,7 @@
 import browserWindowMessageConnection from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/connection/browser-window-message';
 
 import { isInIframe } from './../../aeternity/utils';
-import { setParentLocationURL } from '../../../features/base//connection';
+import { setParentLocationURL } from '../../../features/base/connection';
 
 
 // todo: rename function or move some parts
