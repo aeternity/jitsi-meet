@@ -37,7 +37,7 @@
         }
 
         &.secondary {
-            background: transparent;
+            background: #2A3A4B;
             border: 1px solid #5E6D7A;
         }
 
@@ -76,11 +76,6 @@
             top: 0;
             width: 40px;
         }
-    }
-
-    .preview-overlay {
-        background-image: linear-gradient(transparent, black);
-        z-index: $toolbarZ + 1;
     }
 
     .content {
@@ -156,7 +151,14 @@
             outline-width: 0;
             padding: 8px 0;
             text-align: center;
-            width: 100%;
+            width: 90%;
+            outline: none;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+
+            &:only-child {
+                width: 100%
+            }
 
             &.focused {
                 border-bottom: 1px solid white;
@@ -173,6 +175,10 @@
         justify-content: center;
         margin: 32px 0;
         width: 100%;
+
+        .toolbox-button {
+            outline: none;
+        }
 
         &> div {
             margin: 0 12px;

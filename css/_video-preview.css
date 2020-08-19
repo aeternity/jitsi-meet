@@ -5,6 +5,7 @@
     &-container {
         overflow: auto;
         padding: 16px;
+        background-color: #21222C;
     }
 
     &-entry {
