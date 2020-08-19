@@ -176,6 +176,10 @@
         margin: 32px 0;
         width: 100%;
 
+        .toolbox-button {
+            outline: none;
+        }
+
         &> div {
             margin: 0 12px;
         }
