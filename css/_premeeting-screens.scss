@@ -157,6 +157,9 @@
             padding: 8px 0;
             text-align: center;
             width: 100%;
+            outline: none;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
 
             &.focused {
                 border-bottom: 1px solid white;
