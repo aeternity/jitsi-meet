@@ -5,12 +5,12 @@ import { JitsiConnectionErrors } from '../lib-jitsi-meet';
 import { assign, set, ReducerRegistry } from '../redux';
 
 import {
+    SET_PARENT_LOCATION,
     CONNECTION_DISCONNECTED,
     CONNECTION_ESTABLISHED,
     CONNECTION_FAILED,
     CONNECTION_WILL_CONNECT,
-    SET_LOCATION_URL,
-    SET_PARENT_LOCATION
+    SET_LOCATION_URL
 } from './actionTypes';
 import type { ConnectionFailedError } from './actions.native';
 
