@@ -37,7 +37,7 @@
         }
 
         &.secondary {
-            background: transparent;
+            background: #2A3A4B;
             border: 1px solid #5E6D7A;
         }
 
@@ -76,11 +76,6 @@
             top: 0;
             width: 40px;
         }
-    }
-
-    .preview-overlay {
-        background-image: linear-gradient(transparent, black);
-        z-index: $toolbarZ + 1;
     }
 
     .content {
