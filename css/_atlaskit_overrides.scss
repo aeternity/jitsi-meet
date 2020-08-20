@@ -50,7 +50,7 @@
 }
 
 /**
- * Override @atlaskit/modal-dialog and @atlaskit/button styling for pop-ups
+ * Override @atlaskit/modal-dialog styles.
  */
 
 /**
@@ -72,63 +72,4 @@
 
 .itZGfB {
     color: $modalLabelsColor;
-}
-
-/**
- * Override pop-ups inputs background color
- */
-.jsYMHu {
-    background-color: $chatInputBackground !important;
-}
-
-/**
- * Override alert styles
- */
-.drVnbx {
-    color: $participantNameColor;
-
-    button {
-        color: $subjectTextColor;
-    }
-}
-
-/**
- * Override audio and video preview styles on small resolutions
- */
-.audio-preview .fdAqDG > div {
-    @media (max-width: 540px) {
-        left: -95px !important;
-    }
-}
-
-.video-preview .fdAqDG > div {
-    @media (max-width: 490px) {
-        left: 100px !important;
-    }
-}
-
-/**
- * Override audio preview styles on prejoin page
- */
-.media-btn-container .audio-preview .fdAqDG > div {
-    @media (max-width: 560px) {
-        left: -114px !important;
-    }
-}
-
-/**
- * Override settings styles on devices tab
- */
-.YymJg {
-    @media (min-width: 481px) and (max-width: 550px) {
-        max-width: calc(100% - 50px) !important;
-    }
-}
-
-/**
- * Override scrollbar in settings for Firefox
- */
-.cksvax {
-    scrollbar-color: $filmstripScrollBarColor;
-    scrollbar-width: thin;
 }

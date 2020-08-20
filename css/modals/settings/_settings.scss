@@ -19,8 +19,12 @@
         margin-top: 20px;
     }
 
+    .device-selection {
+        max-width: 100%;
+    }
+
     .mock-atlaskit-label {
-        color: #56637A;
+        color: $modalLabelsColor;
         font-size: 12px;
         font-weight: 600;
         line-height: 1.33;
@@ -38,6 +42,10 @@
         }
     }
 
+    .profile-edit span {
+        color: $modalLabelsColor;
+    }
+
     .profile-edit-field {
         flex: 1;
     }
@@ -51,6 +59,8 @@
 
     .language-settings {
         max-width: 50%;
+        scrollbar-color: $filmstripScrollBarColor;
+        scrollbar-width: thin;
     }
 
     .calendar-tab {
