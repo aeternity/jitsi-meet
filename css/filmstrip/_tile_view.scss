@@ -48,15 +48,6 @@
         top: 0;
         width: 100%;
         z-index: $filmstripVideosZ;
-
-        &.shift-right {
-            margin-left: $sidebarWidth;
-            width: calc(100% - #{$sidebarWidth});
-
-            #filmstripRemoteVideos {
-                width: calc(100vw - #{$sidebarWidth});
-            }
-        }
     }
 
     /**
@@ -92,6 +83,7 @@
         margin-top: auto;
         margin-bottom: auto;
         justify-content: center;
+        width: 100% !important;
 
         .videocontainer {
             border: 0;

@@ -6,6 +6,9 @@
         max-height: 456px;
         overflow: auto;
         width: 328px;
+        position: fixed;
+        bottom: 50%;
+        left: -98px;
     }
 
     &-header {
