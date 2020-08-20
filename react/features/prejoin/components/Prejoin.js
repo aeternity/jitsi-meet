@@ -331,7 +331,7 @@ class Prejoin extends Component<Props, State> {
                     <div className = 'prejoin-input-area-container'>
                         <div className = 'prejoin-input-area'>
                             <InputField
-                                disabled = { isParticipantEditable }
+                                disabled = { !isParticipantEditable }
                                 onChange = { _setName }
                                 onSubmit = { joinConference }
                                 placeHolder = { t('dialog.enterDisplayName') }
@@ -370,7 +370,7 @@ class Prejoin extends Component<Props, State> {
                                         type = 'primary'>
                                         { t('prejoin.joinMeeting') }
                                     </ActionButton>
-                                    { (showWebLoginButton || !walletSynced) && <ActionButton
+                                    { (showWebLoginButton && !walletSynced) && <ActionButton
                                       disabled = { false }
                                       onClick = { signDeepLink }
                                       type = 'secondary'>
@@ -431,6 +431,7 @@ class Prejoin extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state, ownProps): Object {
+    const { ENABLE_SUPERHERO } = interfaceConfig;
     const name = getDisplayName(state);
     const joinButtonDisabled = isDisplayNameRequired(state) && !name;
     const { showJoinActions } = ownProps;
@@ -448,7 +449,7 @@ function mapStateToProps(state, ownProps): Object {
         isAnonymousUser: isGuest(state),
         walletSynced: isWalletJWTSet(state),
         localParticipant: getLocalParticipant(state),
-        showWebLoginButton: !state['features/aeternity'].hasWallet,
+        showWebLoginButton: ENABLE_SUPERHERO && !state['features/aeternity'].hasWallet,
         buttonIsToggled: isPrejoinSkipped(state),
         joinButtonDisabled,
         name,

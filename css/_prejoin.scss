@@ -128,6 +128,11 @@
         background: #0376DA;
         border: 1px solid #0376DA;
         outline: none;
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: auto;
+        }
     }
 
     &-wrapper {
@@ -151,7 +156,7 @@
             outline: none;
             text-align: center;
             width: 90%;
-            
+
             &.full-width {
                 width: 100%;
             }
@@ -233,7 +238,7 @@
     }
 
     &-dropdown-btns {
-        width: 320px;
+        width: 319px;
         padding: 8px 0;
     }
 

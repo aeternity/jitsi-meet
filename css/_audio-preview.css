@@ -1,11 +1,14 @@
 .audio-preview {
     &-content {
-        background: #2A3A4B;
+        background: #21222C;
         font-size: 15px;
         line-height: 24px;
         max-height: 456px;
         overflow: auto;
         width: 328px;
+        position: fixed;
+        bottom: 50%;
+        left: -98px;
     }
 
     &-header {

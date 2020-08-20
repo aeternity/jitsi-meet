@@ -1,14 +1,11 @@
 // @flow
-// eslint-disable-next-line max-len
-import browserWindowMessageConnection from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/connection/browser-window-message';
-import Detector from '@aeternity/aepp-sdk/es/utils/aepp-wallet-communication/wallet-detector';
 import { jitsiLocalStorage } from '@jitsi/js-utils';
 import _ from 'lodash';
 import React from 'react';
 
 import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
 import { InviteMore, Subject } from '.';
-import { client, initClient } from '../../../../client';
+import { client, initClient, scanForWallets } from '../../../../client';
 import { walletFound } from '../../../aeternity';
 import { setJWT } from '../../../base/jwt/actions';
 import { createDeepLinkUrl } from '../../../base/util/createDeepLinkUrl';
@@ -109,7 +106,6 @@ class Conference extends AbstractConference<Props, *> {
     _onShowToolbar: Function;
     _originalOnShowToolbar: Function;
     _sign: Function;
-    _scanForWallets: Function;
 
     /**
      * Initializes a new Conference instance.
@@ -138,7 +134,6 @@ class Conference extends AbstractConference<Props, *> {
         // Bind event handler so it is only bound once for every instance.
         this._onFullScreenChange = this._onFullScreenChange.bind(this);
         this._sign = this._sign.bind(this);
-        this._scanForWallets = this._scanForWallets.bind(this);
     }
 
     /**
@@ -157,7 +152,7 @@ class Conference extends AbstractConference<Props, *> {
 
         if (!addressParam && !signatureParam) {
             initClient().then(() => {
-                this._scanForWallets();
+                scanForWallets(this._sign);
             });
         }
 
@@ -261,33 +256,6 @@ class Conference extends AbstractConference<Props, *> {
                 { !filmstripOnly && _showPrejoin && <Prejoin />}
             </div>
         );
-    }
-
-    /**
-     * Start to search the wallet with sdk.
-     *
-     * @private
-     * @returns {void}
-     *
-     */
-    async _scanForWallets() {
-        const connection = await browserWindowMessageConnection({
-            connectionInfo: { id: 'spy' }
-        });
-
-        // eslint-disable-next-line new-cap
-        const detector = await Detector({ connection });
-
-        detector.scan(async ({ wallets, newWallet }) => {
-            const _newWallet = newWallet || Object.values(wallets)[0];
-            if (_newWallet) {
-                detector.stopScan();
-                await client.connectToWallet(await _newWallet.getConnection());
-                await client.subscribeAddress('subscribe', 'current');
-                this._sign();
-            }
-        });
-
     }
 
     /**

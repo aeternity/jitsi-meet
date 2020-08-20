@@ -138,7 +138,8 @@
         .overflow-menu {
             font-size: 1.2em;
             list-style-type: none;
-            background-color: $overflowMenuBG;
+            background-color: $chatInputBackground;
+            border: 1px solid $borderColor;
             /**
              * Undo atlaskit padding by reducing margins.
              */
@@ -225,6 +226,7 @@
             line-height: $newToolbarSize;
             margin: 0 8px;
             text-align: center;
+            outline: none;
         }
 
         .toolbar-button-with-badge {
