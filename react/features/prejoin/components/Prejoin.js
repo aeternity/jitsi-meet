@@ -8,15 +8,14 @@ import { getRoomName } from '../../base/conference';
 import { translate } from '../../base/i18n';
 import { Icon, IconPhone, IconVolumeOff } from '../../base/icons';
 import { isVideoMutedByUser } from '../../base/media';
-import { ActionButton, InputField, PreMeetingScreen, ToggleButton } from '../../base/premeeting';
 import { getLocalParticipant } from '../../base/participants';
+import { ActionButton, InputField, PreMeetingScreen, ToggleButton } from '../../base/premeeting';
 import { connect } from '../../base/redux';
 import { getDisplayName, updateSettings } from '../../base/settings';
 import { getLocalJitsiVideoTrack } from '../../base/tracks';
-import { isButtonEnabled } from '../../toolbox/functions.web';
-import { signDeepLink } from '../../settings/components/web/WebLoginButton';
 import { isGuest } from '../../invite';
-
+import { signDeepLink } from '../../settings/components/web/WebLoginButton';
+import { isButtonEnabled } from '../../toolbox/functions.web';
 import {
     joinConference as joinConferenceAction,
     joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
@@ -371,9 +370,9 @@ class Prejoin extends Component<Props, State> {
                                         { t('prejoin.joinMeeting') }
                                     </ActionButton>
                                     { (showWebLoginButton && !walletSynced) && <ActionButton
-                                      disabled = { false }
-                                      onClick = { signDeepLink }
-                                      type = 'secondary'>
+                                        disabled = { false }
+                                        onClick = { signDeepLink }
+                                        type = 'secondary'>
                                         { 'Login with Superhero' }
                                     </ActionButton>}
                                 </InlineDialog>

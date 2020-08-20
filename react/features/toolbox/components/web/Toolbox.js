@@ -9,7 +9,6 @@ import {
     sendAnalytics
 } from '../../../analytics';
 import { openDialog, toggleDialog } from '../../../base/dialog';
-import { isMobileBrowser } from '../../../base/environment/utils';
 import { translate } from '../../../base/i18n';
 import {
     IconChat,
@@ -1218,31 +1217,16 @@ class Toolbox extends Component<Props, State> {
         const buttonsLeft = [];
         const buttonsRight = [];
 
-        const smallThreshold = 700;
-        const verySmallThreshold = 500;
-
-        let minSpaceBetweenButtons = 48;
-        let widthPlusPaddingOfButton = 56;
-
-        if (this.state.windowWidth <= verySmallThreshold) {
-            minSpaceBetweenButtons = 26;
-            widthPlusPaddingOfButton = 28;
-        } else if (this.state.windowWidth <= smallThreshold) {
-            minSpaceBetweenButtons = 36;
-            widthPlusPaddingOfButton = 40;
-        }
-
         const maxNumberOfButtonsPerGroup = Math.floor(
             (
                 this.state.windowWidth
                     - 168 // the width of the central group by design
-                    - minSpaceBetweenButtons // the minimum space between the button groups
+                    - 48 // the minimum space between the button groups
             )
-            / widthPlusPaddingOfButton // the width + padding of a button
+            / 56 // the width + padding of a button
             / 2 // divide by the number of groups(left and right group)
         );
 
-        const showOverflowMenu = this.state.windowWidth >= verySmallThreshold || isMobileBrowser();
 
         if (this._shouldShowButton('chat')) {
             buttonsLeft.push('chat');
@@ -1257,7 +1241,7 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('closedcaptions')) {
             buttonsLeft.push('closedcaptions');
         }
-        if (overflowHasItems && showOverflowMenu) {
+        if (overflowHasItems) {
             buttonsRight.push('overflowmenu');
         }
         if (this._shouldShowButton('invite')) {
@@ -1280,13 +1264,13 @@ class Toolbox extends Component<Props, State> {
             movedButtons.push(...buttonsLeft.splice(
                 maxNumberOfButtonsPerGroup,
                 buttonsLeft.length - maxNumberOfButtonsPerGroup));
-            if (buttonsRight.indexOf('overflowmenu') === -1 && showOverflowMenu) {
+            if (buttonsRight.indexOf('overflowmenu') === -1) {
                 buttonsRight.unshift('overflowmenu');
             }
         }
 
         if (buttonsRight.length > maxNumberOfButtonsPerGroup) {
-            if (buttonsRight.indexOf('overflowmenu') === -1 && showOverflowMenu) {
+            if (buttonsRight.indexOf('overflowmenu') === -1) {
                 buttonsRight.unshift('overflowmenu');
             }
 
