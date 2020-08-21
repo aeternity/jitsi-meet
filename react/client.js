@@ -35,8 +35,6 @@ export async function initClient() {
     } catch (sdkError) {
         console.log({ sdkError });
     }
-
-    return;
 }
 
 
