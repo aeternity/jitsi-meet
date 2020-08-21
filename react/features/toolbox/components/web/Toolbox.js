@@ -560,11 +560,6 @@ class Toolbox extends Component<Props, State> {
     _onResize() {
         let widthToUse = window.innerWidth;
 
-        // Take chat size into account when resizing toolbox.
-        if (this.props._chatOpen) {
-            widthToUse -= CHAT_SIZE;
-        }
-
         if (this.state.windowWidth !== widthToUse) {
             this.setState({ windowWidth: widthToUse });
         }
