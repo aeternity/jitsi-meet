@@ -9,7 +9,6 @@ const NODE_URL = 'https://mainnet.aeternity.io';
 const TESTNET_URL = 'https://testnet.aeternity.io';
 const COMPILER_URL = 'https://latest.compiler.aepps.com';
 
-
 /**
  * Initialise the rpc sdk client or universal if RpcAepp fail.
  *
@@ -17,28 +16,25 @@ const COMPILER_URL = 'https://latest.compiler.aepps.com';
  *
  */
 export async function initClient() {
-
-    client = await rpcAepp({
-        name: 'Superhero-league',
-        nodes: [ {
-            name: 'ae_mainnet',
-            instance: await node({
-                url: NODE_URL
-            })
-        }, {
-            name: 'ae_uat',
-            instance: await node({
-                url: TESTNET_URL
-            })
-        } ],
-        compilerUrl: COMPILER_URL
-    });
-
-    if (!client) {
-        client = await initStaticClient();
+    try {
+        client = await rpcAepp({
+            name: 'Superhero-league',
+            nodes: [ {
+                name: 'ae_mainnet',
+                instance: await node({
+                    url: NODE_URL
+                })
+            }, {
+                name: 'ae_uat',
+                instance: await node({
+                    url: TESTNET_URL
+                })
+            } ],
+            compilerUrl: COMPILER_URL
+        });
+    } catch (sdkError) {
+        console.log({ sdkError });
     }
-
-    return;
 }
 
 
@@ -67,24 +63,5 @@ export async function scanForWallets(cb) {
             await client.subscribeAddress('subscribe', 'current');
             cb();
         }
-    });
-}
-
-
-/**
- * Init other sdk client flavor.
- *
- * @returns {void}
- *
- */
-async function initStaticClient() {
-    return universal({
-        compilerUrl: COMPILER_URL,
-        nodes: [ {
-            name: 'mainnet',
-            instance: await node({
-                url: NODE_URL
-            })
-        } ]
     });
 }
