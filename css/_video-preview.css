@@ -5,6 +5,10 @@
     &-container {
         overflow: auto;
         padding: 16px;
+        background-color: #21222C;
+        position: fixed;
+        bottom: 50%;
+        right: -106px;
     }
 
     &-entry {

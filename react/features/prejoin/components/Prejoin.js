@@ -8,15 +8,14 @@ import { getRoomName } from '../../base/conference';
 import { translate } from '../../base/i18n';
 import { Icon, IconPhone, IconVolumeOff } from '../../base/icons';
 import { isVideoMutedByUser } from '../../base/media';
-import { ActionButton, InputField, PreMeetingScreen, ToggleButton } from '../../base/premeeting';
 import { getLocalParticipant } from '../../base/participants';
+import { ActionButton, InputField, PreMeetingScreen, ToggleButton } from '../../base/premeeting';
 import { connect } from '../../base/redux';
 import { getDisplayName, updateSettings } from '../../base/settings';
 import { getLocalJitsiVideoTrack } from '../../base/tracks';
-import { isButtonEnabled } from '../../toolbox/functions.web';
-import { signDeepLink } from '../../settings/components/web/WebLoginButton';
 import { isGuest } from '../../invite';
-
+import { signDeepLink } from '../../settings/components/web/WebLoginButton';
+import { isButtonEnabled } from '../../toolbox/functions.web';
 import {
     joinConference as joinConferenceAction,
     joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
@@ -331,7 +330,7 @@ class Prejoin extends Component<Props, State> {
                     <div className = 'prejoin-input-area-container'>
                         <div className = 'prejoin-input-area'>
                             <InputField
-                                disabled = { isParticipantEditable }
+                                disabled = { !isParticipantEditable }
                                 onChange = { _setName }
                                 onSubmit = { joinConference }
                                 placeHolder = { t('dialog.enterDisplayName') }
@@ -370,10 +369,10 @@ class Prejoin extends Component<Props, State> {
                                         type = 'primary'>
                                         { t('prejoin.joinMeeting') }
                                     </ActionButton>
-                                    { (showWebLoginButton || !walletSynced) && <ActionButton
-                                      disabled = { false }
-                                      onClick = { signDeepLink }
-                                      type = 'secondary'>
+                                    { (showWebLoginButton && !walletSynced) && <ActionButton
+                                        disabled = { false }
+                                        onClick = { signDeepLink }
+                                        type = 'secondary'>
                                         { 'Login with Superhero' }
                                     </ActionButton>}
                                 </InlineDialog>
@@ -431,6 +430,7 @@ class Prejoin extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state, ownProps): Object {
+    const { ENABLE_SUPERHERO } = interfaceConfig;
     const name = getDisplayName(state);
     const joinButtonDisabled = isDisplayNameRequired(state) && !name;
     const { showJoinActions } = ownProps;
@@ -448,7 +448,7 @@ function mapStateToProps(state, ownProps): Object {
         isAnonymousUser: isGuest(state),
         walletSynced: isWalletJWTSet(state),
         localParticipant: getLocalParticipant(state),
-        showWebLoginButton: !state['features/aeternity'].hasWallet,
+        showWebLoginButton: ENABLE_SUPERHERO && !state['features/aeternity'].hasWallet,
         buttonIsToggled: isPrejoinSkipped(state),
         joinButtonDisabled,
         name,
