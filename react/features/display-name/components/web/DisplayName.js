@@ -55,6 +55,16 @@ type Props = {
     participantID: string,
 
     /**
+     * Whether user has wallet
+     */
+    _hasWallet: boolean,
+
+    /**
+     * Participant's akAddress
+     */
+    _akAddress: string,
+
+    /**
      * Invoked to obtain translated strings.
      */
     t: Function
@@ -148,14 +158,18 @@ class DisplayName extends Component<Props, State> {
             allowEditing,
             displayNameSuffix,
             elementID,
+            _hasWallet,
+            _akAddress,
             t
         } = this.props;
+        const isNameDisabled = Boolean(_hasWallet && _akAddress);
 
         if (allowEditing && this.state.isEditing) {
             return (
                 <input
                     autoFocus = { true }
                     className = 'editdisplayname'
+                    disabled = { isNameDisabled }
                     id = 'editDisplayName'
                     onBlur = { this._onSubmit }
                     onChange = { this._onChange }
@@ -288,6 +302,8 @@ function _mapStateToProps(state, ownProps) {
 
     return {
         _configuredDisplayName: participant && participant.name,
+        _akAddress: participant && participant.akAddress,
+        _hasWallet: state['features/aeternity'].hasWallet,
         _nameToDisplay: getParticipantDisplayName(
             state, participantID)
     };

@@ -48,6 +48,12 @@
 
     .profile-edit-field {
         flex: 1;
+
+        #setDisplayName {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: $overflowMenuItemHoverColor;
+        }
     }
     .settings-sub-pane {
         flex-grow: 1;
