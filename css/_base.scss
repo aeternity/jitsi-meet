@@ -130,10 +130,6 @@ form {
     background-size: contain;
     background-repeat: no-repeat;
     z-index: $zindex2;
-
-    @media (max-width: $desktopWidth) {
-        display: none;
-    }
 }
 
 .leftwatermark {
@@ -155,8 +151,8 @@ form {
 
 .poweredby {
     position: absolute;
-    left: 25;
-    bottom: 7;
+    left: 25px;
+    bottom: 7px;
     font-size: 11pt;
     color: rgba(255,255,255,.50);
     text-decoration: none;
