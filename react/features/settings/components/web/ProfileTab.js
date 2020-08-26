@@ -90,8 +90,10 @@ class ProfileTab extends AbstractDialogTab<Props> {
             authEnabled,
             displayName,
             email,
+            walletName,
             t
         } = this.props;
+        const isNameDisabled = Boolean(walletName);
 
         return (
             <div>
@@ -100,6 +102,7 @@ class ProfileTab extends AbstractDialogTab<Props> {
                         <FieldTextStateless
                             autoFocus = { true }
                             compact = { true }
+                            disabled = { isNameDisabled }
                             id = 'setDisplayName'
                             label = { t('profile.setDisplayNameLabel') }
                             // eslint-disable-next-line react/jsx-no-bind

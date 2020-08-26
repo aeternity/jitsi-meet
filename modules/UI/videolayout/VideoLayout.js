@@ -332,7 +332,7 @@ const VideoLayout = {
      */
     onAudioMute(id, isMuted) {
         if (APP.conference.isLocalId(id)) {
-            localVideoThumbnail.showAudioIndicator(isMuted);
+            localVideoThumbnail && localVideoThumbnail.showAudioIndicator(isMuted);
         } else {
             const remoteVideo = remoteVideos[id];
 
@@ -369,7 +369,7 @@ const VideoLayout = {
     onDisplayNameChanged(id) {
         if (id === 'localVideoContainer'
             || APP.conference.isLocalId(id)) {
-            localVideoThumbnail.updateDisplayName();
+            localVideoThumbnail && localVideoThumbnail.updateDisplayName();
         } else {
             const remoteVideo = remoteVideos[id];
 

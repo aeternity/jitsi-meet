@@ -1,10 +1,3 @@
-@media only screen and (max-width: $smallScreen) {
-    .watermark {
-        width: 20%;
-        height: 20%;
-    }
-}
-
 @media only screen and (max-width: $verySmallScreen) {
     .chrome-extension-banner {
         display: none;
