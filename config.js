@@ -186,7 +186,7 @@ var config = {
     // Recording
 
     // Whether to enable file recording or not.
-    fileRecordingsEnabled: true,
+    fileRecordingsEnabled: false,
 
     // Enable the dropbox integration.
     // dropbox: {
