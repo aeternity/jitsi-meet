@@ -132,8 +132,7 @@ form {
     z-index: $zindex2;
 
     @media (max-width: $desktopWidth) {
-        max-height: 60px;
-        max-width: 30%;
+        display: none;
     }
 }
 
