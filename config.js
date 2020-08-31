@@ -5,6 +5,10 @@ var config = {
     //
 
     hosts: {
+
+        // parent document jitsi path
+        parent: 'https://superhero.com/meet',
+
         // XMPP domain.
         domain: '<!--# echo var="domain" default="" -->',
 
@@ -186,7 +190,7 @@ var config = {
     // Recording
 
     // Whether to enable file recording or not.
-    fileRecordingsEnabled: true,
+    fileRecordingsEnabled: false,
 
     // Enable the dropbox integration.
     // dropbox: {

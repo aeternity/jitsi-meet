@@ -1,8 +1,10 @@
 /* @flow */
+/* global config, APP */
 
 import { isInIframe } from '../../aeternity/utils';
 import { toState } from '../redux';
 import { toURLString } from '../util';
+import { getRoomName } from '../conference';
 
 /**
  * Figures out what's the current conference URL which is supposed to indicate what conference is currently active.
@@ -40,8 +42,10 @@ export function getCurrentConferenceUrl(stateful: Function | Object) {
  * @returns {string}
  */
 export function getInviteURL(stateOrGetState: Function | Object): string {
-    if (isInIframe()) {
-        return document.referrer;
+    if (isInIframe() && config.hosts.parent) {
+        const room = getRoomName(APP.store.getState());
+
+        return `${config.hosts.parent}/${room}`;
     }
 
     const state = toState(stateOrGetState);
