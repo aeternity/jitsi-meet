@@ -5,6 +5,10 @@ var config = {
     //
 
     hosts: {
+
+        // parent document jitsi path
+        parent: 'https://superhero.com/meet',
+
         // XMPP domain.
         domain: '<!--# echo var="domain" default="" -->',
 
