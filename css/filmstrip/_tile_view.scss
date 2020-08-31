@@ -119,4 +119,16 @@
     .has-overflow #localVideoContainer {
         margin-bottom: 100px !important;
     }
+
+    .without-camera {
+        order: 11;
+    }
+
+    .with-camera {
+        order: 1;
+    }
+
+    .pinned {
+        order: -1;
+    }
 }

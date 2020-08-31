@@ -11,6 +11,7 @@ import {
 } from '../../../analytics';
 import { translate } from '../../../base/i18n';
 import { Icon, IconMenuDown, IconMenuUp } from '../../../base/icons';
+import { getPinnedParticipant } from '../../../base/participants';
 import { connect } from '../../../base/redux';
 import { dockToolbox } from '../../../toolbox/actions.web';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
@@ -82,6 +83,11 @@ type Props = {
      * Whether or not the filmstrip videos should currently be displayed.
      */
     _visible: boolean,
+
+    /**
+     * Is anybody pinned.
+     */
+    _pinnedParticipant: Object,
 
     /**
      * The redux {@code dispatch} function.
@@ -178,11 +184,14 @@ class Filmstrip extends Component <Props> {
         const filmstripStyle = { };
         const filmstripRemoteVideosContainerStyle = {};
         let remoteVideoContainerClassName = 'remote-videos-container';
+        const pinnedParticipant = document.getElementById('filmstripRemoteVideosContainer');
 
         switch (this.props._currentLayout) {
         case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
             // Adding 18px for the 2px margins, 2px borders on the left and right and 5px padding on the left and right.
             // Also adding 7px for the scrollbar.
+            pinnedParticipant && pinnedParticipant.firstElementChild.classList.remove('pinned');
+
             filmstripStyle.maxWidth = (interfaceConfig.FILM_STRIP_MAX_HEIGHT || 120) + 25;
             break;
         case LAYOUTS.TILE_VIEW: {
@@ -224,6 +233,8 @@ class Filmstrip extends Component <Props> {
         }
 
         filmstripStyle.background = this.props._visible ? 'rgba(33,34,44, 0.66)' : 'none';
+        (pinnedParticipant && this.props._pinnedParticipant)
+        && pinnedParticipant.firstElementChild.classList.add('pinned');
 
         return (
             <div
@@ -396,6 +407,7 @@ function _mapStateToProps(state) {
         isFilmstripOnly ? ' filmstrip__videos-filmstripOnly' : ''}${
         visible ? '' : ' hidden'}`;
     const { gridDimensions = {}, filmstripWidth } = state['features/filmstrip'].tileViewDimensions;
+    const pinnedParticipant = getPinnedParticipant(state);
 
     return {
         _className: className,
@@ -408,6 +420,7 @@ function _mapStateToProps(state) {
         _hovered: hovered,
         _rows: gridDimensions.rows,
         _videosClassName: videosClassName,
+        _pinnedParticipant: pinnedParticipant,
         _visible: visible
     };
 }
