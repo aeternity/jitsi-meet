@@ -42,7 +42,7 @@ export function getCurrentConferenceUrl(stateful: Function | Object) {
  * @returns {string}
  */
 export function getInviteURL(stateOrGetState: Function | Object): string {
-    if (isInIframe()) {
+    if (isInIframe() && config.hosts.parent) {
         const room = getRoomName(APP.store.getState());
 
         return `${config.hosts.parent}/${room}`;
