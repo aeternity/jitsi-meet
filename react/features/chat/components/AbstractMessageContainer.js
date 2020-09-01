@@ -1,6 +1,12 @@
 // @flow
+/* global APP  */
 
 import { PureComponent } from 'react';
+
+import {
+    getLocalParticipant,
+    getParticipants
+} from '../../base/participants';
 
 export type Props = {
 
@@ -31,18 +37,25 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
         const messagesCount = this.props.messages.length;
         const groups = [];
         let currentGrouping = [];
-        let currentGroupParticipantId;
+        let currentGroupParticipantName;
+        const localParticipant = getLocalParticipant(APP.store.getState());
+        const participantsList = getParticipants(APP.store.getState());
 
         for (let i = 0; i < messagesCount; i++) {
             const message = this.props.messages[i];
+            const participant = participantsList.find(item => item.name === message.displayName);
 
-            if (message.id === currentGroupParticipantId) {
+            message.akAddress = participant.akAddress;
+
+            if (message.displayName === currentGroupParticipantName) {
                 currentGrouping.push(message);
             } else {
                 currentGrouping.length && groups.push(currentGrouping);
-
+                if (localParticipant.name === message.displayName) {
+                    message.messageType = 'local';
+                }
                 currentGrouping = [ message ];
-                currentGroupParticipantId = message.id;
+                currentGroupParticipantName = message.displayName;
             }
         }
 
