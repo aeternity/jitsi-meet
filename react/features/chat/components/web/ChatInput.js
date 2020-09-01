@@ -21,6 +21,11 @@ type Props = {
     dispatch: Dispatch<any>,
 
     /**
+     * Object with local participant data.
+     */
+    localParticipant: Object,
+
+    /**
      * Optional callback to invoke when the chat textarea has auto-resized to
      * fit overflowing text.
      */
@@ -55,12 +60,7 @@ type State = {
     /**
      * Whether or not the smiley selector is visible.
      */
-    showSmileysPanel: boolean,
-
-    /**
-     * Window size
-     */
-    width: number
+    showSmileysPanel: boolean
 };
 
 /**
@@ -74,8 +74,7 @@ class ChatInput extends Component<Props, State> {
     state = {
         width: 0,
         message: '',
-        showSmileysPanel: false,
-        width: 0
+        showSmileysPanel: false
     };
 
     /**
@@ -182,7 +181,11 @@ class ChatInput extends Component<Props, State> {
             const trimmed = this.state.message.trim();
 
             if (trimmed) {
-                this.props.onSend(trimmed);
+                const { localParticipant } = this.props;
+                const identificator = localParticipant.akAddress ? `${localParticipant.akAddress}_` : '';
+                const text = `${identificator}${trimmed}`;
+
+                this.props.onSend(text);
 
                 this.setState({ message: '' });
             }

@@ -37,29 +37,27 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
         const messagesCount = this.props.messages.length;
         const groups = [];
         let currentGrouping = [];
-        let currentGroupParticipantName;
         let currentGroupParticipantId;
         const localParticipant = getLocalParticipant(APP.store.getState());
-        const participantsList = getParticipants(APP.store.getState());
 
         for (let i = 0; i < messagesCount; i++) {
             const message = this.props.messages[i];
-            const participant = participantsList.find(item => item.name === message.displayName);
+            const splitedMessage = message.message.split('_');
+            const akAddress = splitedMessage.length > 1 ? splitedMessage.slice(0, 2).join('_') : '';
+            const text = splitedMessage.pop();
 
-            message.akAddress = participant.akAddress;
+            message.akAddress = akAddress;
+            message.message = text;
 
-            const condition = participant.akAddress ? message.displayName === currentGroupParticipantName
-                : message.id === currentGroupParticipantId;
+            if (localParticipant.name === message.displayName && message.akAddress) {
+                message.messageType = 'local';
+            }
 
-            if (condition) {
+            if (message.id === currentGroupParticipantId) {
                 currentGrouping.push(message);
             } else {
                 currentGrouping.length && groups.push(currentGrouping);
-                if (localParticipant.name === message.displayName && message.akAddress) {
-                    message.messageType = 'local';
-                }
                 currentGrouping = [ message ];
-                currentGroupParticipantName = message.displayName;
                 currentGroupParticipantId = message.id;
             }
         }
