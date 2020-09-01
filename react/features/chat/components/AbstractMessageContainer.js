@@ -4,8 +4,7 @@
 import { PureComponent } from 'react';
 
 import {
-    getLocalParticipant,
-    getParticipants
+    getLocalParticipant
 } from '../../base/participants';
 
 export type Props = {
