@@ -41,14 +41,12 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
 
         for (let i = 0; i < messagesCount; i++) {
             const message = this.props.messages[i];
-            const splitedMessage = message.message.split('_');
-            const akAddress = splitedMessage.length > 1 ? splitedMessage.slice(0, 2).join('_') : '';
-            const text = splitedMessage.pop();
+            const regExp = /\[(ak_[A-Za-z0-9]{48,50})]/;
+            const akAddress = message.message.match(regExp);
 
-            message.akAddress = akAddress;
-            message.message = text;
+            message.akAddress = (akAddress && akAddress[1]) || '';
 
-            if (localParticipant.name === message.displayName && message.akAddress) {
+            if (localParticipant.name === message.displayName && message.akAddress === localParticipant.akAddress) {
                 message.messageType = 'local';
             }
 

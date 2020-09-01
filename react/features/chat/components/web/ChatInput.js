@@ -182,7 +182,7 @@ class ChatInput extends Component<Props, State> {
 
             if (trimmed) {
                 const { localParticipant } = this.props;
-                const identificator = localParticipant.akAddress ? `${localParticipant.akAddress}_` : '';
+                const identificator = localParticipant.akAddress ? `[${localParticipant.akAddress}]` : '';
                 const text = `${identificator}${trimmed}`;
 
                 this.props.onSend(text);
