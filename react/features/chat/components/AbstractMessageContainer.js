@@ -38,6 +38,7 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
         const groups = [];
         let currentGrouping = [];
         let currentGroupParticipantName;
+        let currentGroupParticipantId;
         const localParticipant = getLocalParticipant(APP.store.getState());
         const participantsList = getParticipants(APP.store.getState());
 
@@ -47,7 +48,11 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
 
             message.akAddress = participant.akAddress;
 
-            if (message.displayName === currentGroupParticipantName) {
+            const condition = participant.akAddress ? message.displayName === currentGroupParticipantName
+                : message.id === currentGroupParticipantId;
+
+
+            if (condition) {
                 currentGrouping.push(message);
             } else {
                 currentGrouping.length && groups.push(currentGrouping);
@@ -56,6 +61,7 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
                 }
                 currentGrouping = [ message ];
                 currentGroupParticipantName = message.displayName;
+                currentGroupParticipantId = message.id;
             }
         }
 
