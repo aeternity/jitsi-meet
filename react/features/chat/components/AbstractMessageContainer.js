@@ -51,12 +51,11 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
             const condition = participant.akAddress ? message.displayName === currentGroupParticipantName
                 : message.id === currentGroupParticipantId;
 
-
             if (condition) {
                 currentGrouping.push(message);
             } else {
                 currentGrouping.length && groups.push(currentGrouping);
-                if (localParticipant.name === message.displayName) {
+                if (localParticipant.name === message.displayName && message.akAddress) {
                     message.messageType = 'local';
                 }
                 currentGrouping = [ message ];
