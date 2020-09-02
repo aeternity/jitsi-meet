@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 
+import { client } from '../../../../client';
 import TipButton from '../../../aeternity/components/TipButton';
 import { getLocalParticipant, getParticipantById, PARTICIPANT_ROLE } from '../../../base/participants';
 import { connect } from '../../../base/redux';
@@ -103,7 +104,7 @@ class StatusIndicators extends Component<Props> {
                     && <div className = 'tip-block'>
                         <TipButton
                             account = { _akAddress }
-                            hasWallet = { hasWallet }
+                            hasWallet = { hasWallet && Boolean(client) }
                             layout = { _currentLayout } />
                     </div>
                 }
