@@ -145,6 +145,11 @@ type Props = {
 type State = {
 
     /**
+     * Timeout for wallet connection.
+     */
+    timeout: boolean,
+
+    /**
      * Flag controlling the visibility of the 'join by phone' buttons.
      */
     showJoinByPhoneButtons: boolean
@@ -174,7 +179,8 @@ class Prejoin extends Component<Props, State> {
         super(props);
 
         this.state = {
-            showJoinByPhoneButtons: false
+            showJoinByPhoneButtons: false,
+            timeout: true
         };
 
         this._closeDialog = this._closeDialog.bind(this);
@@ -183,6 +189,15 @@ class Prejoin extends Component<Props, State> {
         this._onDropdownClose = this._onDropdownClose.bind(this);
         this._onOptionsClick = this._onOptionsClick.bind(this);
         this._setName = this._setName.bind(this);
+    }
+
+    /**
+     * Implements React {@code Component}'s componentDidMount.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        setTimeout(() => this.setState({ timeout: false }), 5000);
     }
 
     _onToggleButtonClick: () => void;
@@ -289,7 +304,7 @@ class Prejoin extends Component<Props, State> {
         const displayName = walletSynced ? localParticipant.name : '';
 
         const { _closeDialog, _onDropdownClose, _onOptionsClick, _setName, _showDialog } = this;
-        const { showJoinByPhoneButtons } = this.state;
+        const { showJoinByPhoneButtons, timeout } = this.state;
 
         return (
             <PreMeetingScreen
@@ -303,14 +318,21 @@ class Prejoin extends Component<Props, State> {
                 videoTrack = { videoTrack }>
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
-                        <div className = 'prejoin-input-area'>
+                        {!walletSynced && timeout
+                        && <div className = 'timeout'> Please wait while connecting to your wallet </div>}
+                        {(showWebLoginButton && !walletSynced && !timeout) && <ActionButton
+                            disabled = { false }
+                            onClick = { signDeepLink }
+                            type = 'secondary'>
+                            { 'Login with Web wallet' }
+                        </ActionButton>}
+                        {walletSynced && <div className = 'prejoin-input-area'>
                             <InputField
                                 disabled = { true }
                                 onChange = { _setName }
                                 onSubmit = { joinConference }
                                 placeHolder = { t('dialog.enterDisplayName') }
                                 value = { displayName } />
-
                             <div className = 'prejoin-preview-dropdown-container'>
                                 <InlineDialog
                                     content = { <div className = 'prejoin-preview-dropdown-btns'>
@@ -344,15 +366,9 @@ class Prejoin extends Component<Props, State> {
                                         type = 'primary'>
                                         { t('prejoin.joinMeeting') }
                                     </ActionButton>
-                                    { (showWebLoginButton && !walletSynced) && <ActionButton
-                                        disabled = { false }
-                                        onClick = { signDeepLink }
-                                        type = 'secondary'>
-                                        { 'Login with Superhero' }
-                                    </ActionButton>}
                                 </InlineDialog>
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 )}
                 { showDialog && (
