@@ -39,6 +39,11 @@
         &.secondary {
             background: #2A3A4B;
             border: 1px solid #5E6D7A;
+            display: none;
+
+            @media screen and (max-width: 500px) {
+                display: block;
+            }
         }
 
         &.text {
