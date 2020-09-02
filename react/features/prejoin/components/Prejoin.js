@@ -286,7 +286,6 @@ class Prejoin extends Component<Props, State> {
             t,
             videoTrack
         } = this.props;
-        const isInputNameDisabled = true;
         const displayName = walletSynced ? localParticipant.name : '';
 
         const { _closeDialog, _onDropdownClose, _onOptionsClick, _setName, _showDialog } = this;
@@ -306,7 +305,7 @@ class Prejoin extends Component<Props, State> {
                     <div className = 'prejoin-input-area-container'>
                         <div className = 'prejoin-input-area'>
                             <InputField
-                                disabled = { isInputNameDisabled }
+                                disabled = { true }
                                 onChange = { _setName }
                                 onSubmit = { joinConference }
                                 placeHolder = { t('dialog.enterDisplayName') }
