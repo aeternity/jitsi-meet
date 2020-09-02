@@ -132,6 +132,11 @@ type Props = {
     showDialog: boolean,
 
     /**
+     * Timeout for wallet connection.
+     */
+    timeout: boolean,
+
+    /**
      * Used for translation.
      */
     t: Function,
@@ -174,7 +179,7 @@ class Prejoin extends Component<Props, State> {
         super(props);
 
         this.state = {
-            showJoinByPhoneButtons: false,
+            showJoinByPhoneButtons: false
         };
 
         this._closeDialog = this._closeDialog.bind(this);
