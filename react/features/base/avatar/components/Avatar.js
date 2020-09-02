@@ -10,6 +10,7 @@ import { getAvatarColor, getInitials } from '../functions';
 import { StatelessAvatar } from '.';
 
 export type Props = {
+
     /**
      * TestId of the element, if any.
      */
@@ -198,7 +199,7 @@ class Avatar<P: Props> extends PureComponent<P, State> {
 export function _mapStateToProps(state: Object, ownProps: Props) {
     const { colorBase, displayName, participantId } = ownProps;
     const _participant: ?Object = participantId && getParticipantById(state, participantId);
-    const _initialsBase = _participant?.name ?? displayName;
+    const _initialsBase = displayName;
     const screenShares = state['features/video-layout'].screenShares || [];
     const akAddress = _participant?.akAddress;
 

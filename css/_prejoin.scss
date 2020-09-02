@@ -124,23 +124,6 @@
         width: 100%;
     }
 
-    &-clear {
-        background: #0376DA;
-        border: 1px solid #0376DA;
-        outline: none;
-
-        &:disabled {
-            opacity: 0.4;
-            cursor: auto;
-        }
-    }
-
-    &-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-    }
-
     &-name {
         color: #fff;
         font-size: 19px;
