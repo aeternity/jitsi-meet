@@ -310,7 +310,10 @@ class Prejoin extends Component<Props, State> {
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
                         {!walletSynced && timeout
-                        && <div className = 'timeout'> Please wait while connecting to your wallet </div>}
+                        && <div className = 'prejoin-loader '>
+                            <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
+                            <div className = 'timeout'> Please wait while connecting to your wallet </div>
+                        </div>}
                         {(showWebLoginButton && !walletSynced && !timeout) && <ActionButton
                             disabled = { false }
                             onClick = { signDeepLink }

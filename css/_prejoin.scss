@@ -258,6 +258,12 @@
 
 }
 
+.prejoin-loader {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .timeout {
     color: #fff;
     font-weight: bold;
