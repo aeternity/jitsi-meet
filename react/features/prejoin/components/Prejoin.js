@@ -145,11 +145,6 @@ type Props = {
 type State = {
 
     /**
-     * Timeout for wallet connection.
-     */
-    timeout: boolean,
-
-    /**
      * Flag controlling the visibility of the 'join by phone' buttons.
      */
     showJoinByPhoneButtons: boolean
@@ -180,7 +175,6 @@ class Prejoin extends Component<Props, State> {
 
         this.state = {
             showJoinByPhoneButtons: false,
-            timeout: true
         };
 
         this._closeDialog = this._closeDialog.bind(this);
@@ -189,15 +183,6 @@ class Prejoin extends Component<Props, State> {
         this._onDropdownClose = this._onDropdownClose.bind(this);
         this._onOptionsClick = this._onOptionsClick.bind(this);
         this._setName = this._setName.bind(this);
-    }
-
-    /**
-     * Implements React {@code Component}'s componentDidMount.
-     *
-     * @inheritdoc
-     */
-    componentDidMount() {
-        setTimeout(() => this.setState({ timeout: false }), 5000);
     }
 
     _onToggleButtonClick: () => void;
@@ -299,12 +284,13 @@ class Prejoin extends Component<Props, State> {
             showConferenceInfo,
             showJoinActions,
             t,
-            videoTrack
+            videoTrack,
+            timeout
         } = this.props;
         const displayName = walletSynced ? localParticipant.name : '';
 
         const { _closeDialog, _onDropdownClose, _onOptionsClick, _setName, _showDialog } = this;
-        const { showJoinByPhoneButtons, timeout } = this.state;
+        const { showJoinByPhoneButtons } = this.state;
 
         return (
             <PreMeetingScreen
