@@ -32,7 +32,7 @@ class ChatMessage extends AbstractChatMessage<Props> {
 
         content.forEach(i => {
             if (typeof i === 'string') {
-                const regExp = /\[(ak_[A-Za-z0-9]{48,50})]/;
+                const regExp = /^\[(ak_[A-Za-z0-9]{48,50})]/;
                 const text = i.replace(regExp, '');
 
                 processedMessage.push(<Linkify key = { i }>{ text }</Linkify>);
