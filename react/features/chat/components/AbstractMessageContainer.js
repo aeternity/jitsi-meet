@@ -41,7 +41,7 @@ export default class AbstractMessageContainer<P: Props> extends PureComponent<P>
 
         for (let i = 0; i < messagesCount; i++) {
             const message = this.props.messages[i];
-            const regExp = /\[(ak_[A-Za-z0-9]{48,50})]/;
+            const regExp = /^\[(ak_[A-Za-z0-9]{48,50})]/;
             const akAddress = message.message.match(regExp);
 
             message.akAddress = (akAddress && akAddress[1]) || '';
