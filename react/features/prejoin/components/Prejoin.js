@@ -312,7 +312,7 @@ class Prejoin extends Component<Props, State> {
                             disabled = { false }
                             onClick = { signDeepLink }
                             type = 'secondary'>
-                            { 'Login with Web wallet' }
+                            { 'Login with Superhero ID' }
                         </ActionButton>}
                         {walletSynced && <div className = 'prejoin-input-area'>
                             <InputField
