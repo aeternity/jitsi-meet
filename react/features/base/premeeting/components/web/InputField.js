@@ -86,7 +86,6 @@ export default class InputField extends PureComponent<Props, State> {
         this._onChange = this._onChange.bind(this);
         this._onFocus = this._onFocus.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
-        this._onClearInput = this._onClearInput.bind(this);
     }
 
     /**
@@ -115,26 +114,20 @@ export default class InputField extends PureComponent<Props, State> {
     render() {
         const { disabled, className, testId, placeHolder, type } = this.props;
         const { value, focused } = this.state;
-        const { _onClearInput, _onBlur, _onChange, _onFocus, _onKeyDown } = this;
+        const { _onBlur, _onChange, _onFocus, _onKeyDown } = this;
 
         return (
-            <div className = 'prejoin-preview-wrapper'>
-                <input
-                    className = { `field ${focused ? 'focused' : ''} ${className || ''}` }
-                    data-testid = { testId ? testId : undefined }
-                    disabled = { disabled }
-                    onBlur = { _onBlur }
-                    onChange = { _onChange }
-                    onFocus = { _onFocus }
-                    onKeyDown = { _onKeyDown }
-                    placeholder = { placeHolder }
-                    type = { type }
-                    value = { value } />
-                {!disabled && <button
-                    className = 'prejoin-preview-clear'
-                    disabled = { !value }
-                    onClick = { _onClearInput }>x</button>}
-            </div>
+            <input
+                className = { `field ${focused ? 'focused' : ''} ${className || ''}` }
+                data-testid = { testId ? testId : undefined }
+                disabled = { disabled }
+                onBlur = { _onBlur }
+                onChange = { _onChange }
+                onFocus = { _onFocus }
+                onKeyDown = { _onKeyDown }
+                placeholder = { placeHolder }
+                type = { type }
+                value = { value } />
         );
     }
 
@@ -196,16 +189,5 @@ export default class InputField extends PureComponent<Props, State> {
         const { onSubmit } = this.props;
 
         onSubmit && event.key === 'Enter' && onSubmit();
-    }
-
-    _onClearInput: () => void;
-
-    /**
-     * Clear input's value
-     *
-     * @returns {void}
-     */
-    _onClearInput() {
-        this.props.onChange('');
     }
 }

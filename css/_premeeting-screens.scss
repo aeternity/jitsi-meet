@@ -39,6 +39,11 @@
         &.secondary {
             background: #2A3A4B;
             border: 1px solid #5E6D7A;
+            display: none;
+
+            @media screen and (max-width: 400px) {
+                display: block;
+            }
         }
 
         &.text {
@@ -151,14 +156,10 @@
             outline-width: 0;
             padding: 8px 0;
             text-align: center;
-            width: 90%;
+            width: 100%;
             outline: none;
             overflow-x: hidden;
             text-overflow: ellipsis;
-
-            &:only-child {
-                width: 100%
-            }
 
             &.focused {
                 border-bottom: 1px solid white;
