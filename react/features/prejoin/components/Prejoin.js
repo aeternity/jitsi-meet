@@ -140,6 +140,11 @@ type Props = {
      * The JitsiLocalTrack to display.
      */
     videoTrack: ?Object,
+
+    /*
+    * True if JWT was rejected by user.
+    */
+    isJWTRejected: boolean
 };
 
 type State = {
@@ -284,7 +289,8 @@ class Prejoin extends Component<Props, State> {
             showConferenceInfo,
             showJoinActions,
             t,
-            videoTrack
+            videoTrack,
+            isJWTRejected
         } = this.props;
         const displayName = walletSynced ? localParticipant.name : '';
 
@@ -303,11 +309,14 @@ class Prejoin extends Component<Props, State> {
                 videoTrack = { videoTrack }>
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
-                        {!walletSynced
+                        {!isJWTRejected ? !walletSynced
                         && <div className = 'prejoin-loader'>
                             <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
                             <div className = 'timeout'> Please wait while connecting to your wallet </div>
-                        </div>}
+                        </div>
+                        :
+                            <div>Login canceled. Please refresh the page to try again</div>
+                        }
                         {(showWebLoginButton && !walletSynced) && <ActionButton
                             disabled = { false }
                             onClick = { signDeepLink }
@@ -435,7 +444,8 @@ function mapStateToProps(state, ownProps): Object {
         hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
         showCameraPreview: !isVideoMutedByUser(state),
         showConferenceInfo,
-        videoTrack: getLocalJitsiVideoTrack(state)
+        videoTrack: getLocalJitsiVideoTrack(state),
+        isJWTRejected: state['features/base/jwt'].reject
     };
 }
 
