@@ -124,23 +124,6 @@
         width: 100%;
     }
 
-    &-clear {
-        background: #0376DA;
-        border: 1px solid #0376DA;
-        outline: none;
-
-        &:disabled {
-            opacity: 0.4;
-            cursor: auto;
-        }
-    }
-
-    &-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-    }
-
     &-name {
         color: #fff;
         font-size: 19px;
@@ -273,4 +256,22 @@
         }
     }
 
+}
+
+.prejoin-loader {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    @media screen and (max-width: 400px) {
+        display: none;
+    }
+}
+
+.timeout {
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 7px;
+    font-size: 14px;
+    line-height: 24px;
 }
