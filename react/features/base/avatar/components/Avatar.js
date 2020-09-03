@@ -10,7 +10,6 @@ import { getAvatarColor, getInitials } from '../functions';
 import { StatelessAvatar } from '.';
 
 export type Props = {
-
     /**
      * TestId of the element, if any.
      */
