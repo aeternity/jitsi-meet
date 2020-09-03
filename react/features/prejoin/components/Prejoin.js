@@ -132,6 +132,11 @@ type Props = {
     showDialog: boolean,
 
     /**
+     * Timeout for wallet connection.
+     */
+    timeout: boolean,
+
+    /**
      * Used for translation.
      */
     t: Function,
@@ -174,7 +179,7 @@ class Prejoin extends Component<Props, State> {
         super(props);
 
         this.state = {
-            showJoinByPhoneButtons: false,
+            showJoinByPhoneButtons: false
         };
 
         this._closeDialog = this._closeDialog.bind(this);
@@ -305,7 +310,10 @@ class Prejoin extends Component<Props, State> {
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
                         {!walletSynced && timeout
-                        && <div className = 'timeout'> Please wait while connecting to your wallet </div>}
+                        && <div className = 'prejoin-loader '>
+                            <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
+                            <div className = 'timeout'> Please wait while connecting to your wallet </div>
+                        </div>}
                         {(showWebLoginButton && !walletSynced && !timeout) && <ActionButton
                             disabled = { false }
                             onClick = { signDeepLink }
