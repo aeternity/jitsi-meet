@@ -152,7 +152,10 @@ class Conference extends AbstractConference<Props, *> {
 
         if (!addressParam && !signatureParam) {
             initClient().then(() => {
-                scanForWallets(this._sign);
+                scanForWallets(() => {
+                    this._sign();
+                    this.props.dispatch(walletFound());
+                });
             });
         }
 
@@ -288,7 +291,6 @@ class Conference extends AbstractConference<Props, *> {
         // if user will click the "reject" button the code will stops before that line
         this.props.dispatch(setJWT(token));
         this.setState({ showDeeplink: false });
-        APP.store.dispatch(walletFound());
     }
 
     /**
