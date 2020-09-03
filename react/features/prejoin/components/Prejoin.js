@@ -132,11 +132,6 @@ type Props = {
     showDialog: boolean,
 
     /**
-     * Timeout for wallet connection.
-     */
-    timeout: boolean,
-
-    /**
      * Used for translation.
      */
     t: Function,
@@ -290,7 +285,6 @@ class Prejoin extends Component<Props, State> {
             showJoinActions,
             t,
             videoTrack,
-            timeout
         } = this.props;
         const displayName = walletSynced ? localParticipant.name : '';
 
@@ -309,12 +303,12 @@ class Prejoin extends Component<Props, State> {
                 videoTrack = { videoTrack }>
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
-                        {!walletSynced && timeout
-                        && <div className = 'prejoin-loader '>
+                        {!walletSynced
+                        && <div className = 'prejoin-loader'>
                             <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
                             <div className = 'timeout'> Please wait while connecting to your wallet </div>
                         </div>}
-                        {(showWebLoginButton && !walletSynced && !timeout) && <ActionButton
+                        {(showWebLoginButton && !walletSynced) && <ActionButton
                             disabled = { false }
                             onClick = { signDeepLink }
                             type = 'secondary'>

@@ -117,8 +117,7 @@ class Conference extends AbstractConference<Props, *> {
         super(props);
 
         this.state = {
-            showDeeplink: true,
-            timeout: true
+            showDeeplink: true
         };
 
         // Throttle and bind this component's mousemove handler to prevent it
@@ -143,8 +142,6 @@ class Conference extends AbstractConference<Props, *> {
      * @inheritdoc
      */
     componentDidMount() {
-        this.timeoutId = setTimeout(() => this.setState({ timeout: false }), 5000);
-
         document.title = `${this.props._roomName} | ${interfaceConfig.APP_NAME}`;
         const { ENABLE_SUPERHERO } = interfaceConfig;
         const { address: addressParam, signature: signatureParam } = parseURLParams(window.location, true, 'search');
@@ -157,7 +154,6 @@ class Conference extends AbstractConference<Props, *> {
             initClient().then(() => {
                 scanForWallets(() => {
                     this._sign();
-                    clearTimeout(this.timeoutId);
                     this.props.dispatch(walletFound());
                 });
             });
@@ -182,17 +178,6 @@ class Conference extends AbstractConference<Props, *> {
             this._sign(signatureParam, addressStorage, messageStorage);
         }
         this._start();
-    }
-
-
-    /**
-     * Removes all listeners.
-     *
-     * @inheritdoc
-     * @returns {void}
-     */
-    componentWillUnmount() {
-        clearTimeout(this.timeoutId);
     }
 
     /**
@@ -271,7 +256,7 @@ class Conference extends AbstractConference<Props, *> {
 
                 <CalleeInfoContainer />
 
-                { !filmstripOnly && _showPrejoin && <Prejoin timeout = { this.state.timeout } />}
+                { !filmstripOnly && _showPrejoin && <Prejoin />}
             </div>
         );
     }
