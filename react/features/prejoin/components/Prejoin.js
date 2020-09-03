@@ -309,14 +309,12 @@ class Prejoin extends Component<Props, State> {
                 videoTrack = { videoTrack }>
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
-                        {!isJWTRejected ? !walletSynced
-                        && <div className = 'prejoin-loader'>
-                            <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
-                            <div className = 'timeout'> Please wait while connecting to your wallet </div>
-                        </div>
-                        :
-                            <div>Login canceled. Please refresh the page to try again</div>
-                        }
+                        {isJWTRejected ? <div>Login canceled. Please refresh the page to try again</div>
+                            : !walletSynced
+                            && <div className = 'prejoin-loader'>
+                                <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
+                                <div className = 'timeout'> Please wait while connecting to your wallet </div>
+                            </div>}
                         {(showWebLoginButton && !walletSynced) && <ActionButton
                             disabled = { false }
                             onClick = { signDeepLink }
