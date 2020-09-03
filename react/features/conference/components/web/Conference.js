@@ -157,8 +157,8 @@ class Conference extends AbstractConference<Props, *> {
             initClient().then(() => {
                 scanForWallets(() => {
                     this._sign();
-                    APP.store.dispatch(walletFound());
                     clearTimeout(this.timeoutId);
+                    this.props.dispatch(walletFound());
                 });
             });
         }
