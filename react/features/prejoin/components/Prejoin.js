@@ -284,7 +284,7 @@ class Prejoin extends Component<Props, State> {
             showConferenceInfo,
             showJoinActions,
             t,
-            videoTrack,
+            videoTrack
         } = this.props;
         const displayName = walletSynced ? localParticipant.name : '';
 
