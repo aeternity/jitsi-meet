@@ -13,7 +13,6 @@ import { ActionButton, InputField, PreMeetingScreen, ToggleButton } from '../../
 import { connect } from '../../base/redux';
 import { getDisplayName, updateSettings } from '../../base/settings';
 import { getLocalJitsiVideoTrack } from '../../base/tracks';
-import { isGuest } from '../../invite';
 import { signDeepLink } from '../../settings/components/web/WebLoginButton';
 import { isButtonEnabled } from '../../toolbox/functions.web';
 import {
@@ -53,11 +52,6 @@ type Props = {
     showWebLoginButton: boolean,
 
     /**
-     * Flag signaling if a user is logged in or not.
-     */
-    isAnonymousUser: boolean,
-
-    /**
      * Flag signaling if the 'skip prejoin' button is toggled or not.
      */
     buttonIsToggled: boolean,
@@ -91,11 +85,6 @@ type Props = {
      * Joins the current meeting without audio.
      */
     joinConferenceWithoutAudio: Function,
-
-    /**
-     * The name of the user that is about to join.
-     */
-    name: string,
 
     /**
      * Updates settings.
@@ -141,11 +130,6 @@ type Props = {
      * If 'JoinByPhoneDialog' is visible or not.
      */
     showDialog: boolean,
-
-    /**
-     * local participant
-    */
-    localParticipant: Object,
 
     /**
      * Used for translation.
@@ -290,12 +274,10 @@ class Prejoin extends Component<Props, State> {
             walletSynced,
             showWebLoginButton,
             localParticipant,
-            isAnonymousUser,
             joinButtonDisabled,
             hasJoinByPhoneButton,
             joinConference,
             joinConferenceWithoutAudio,
-            name,
             showAvatar,
             showCameraPreview,
             showDialog,
@@ -304,14 +286,7 @@ class Prejoin extends Component<Props, State> {
             t,
             videoTrack
         } = this.props;
-        let isParticipantEditable = true;
-        let displayName = name;
-
-        if (walletSynced) {
-            displayName = localParticipant.name;
-            isParticipantEditable = false;
-        }
-        isParticipantEditable = isParticipantEditable && isAnonymousUser;
+        const displayName = walletSynced ? localParticipant.name : '';
 
         const { _closeDialog, _onDropdownClose, _onOptionsClick, _setName, _showDialog } = this;
         const { showJoinByPhoneButtons } = this.state;
@@ -328,14 +303,24 @@ class Prejoin extends Component<Props, State> {
                 videoTrack = { videoTrack }>
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
-                        <div className = 'prejoin-input-area'>
+                        {!walletSynced
+                        && <div className = 'prejoin-loader'>
+                            <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
+                            <div className = 'timeout'> Please wait while connecting to your wallet </div>
+                        </div>}
+                        {(showWebLoginButton && !walletSynced) && <ActionButton
+                            disabled = { false }
+                            onClick = { signDeepLink }
+                            type = 'secondary'>
+                            { 'Login with Superhero ID' }
+                        </ActionButton>}
+                        {walletSynced && <div className = 'prejoin-input-area'>
                             <InputField
-                                disabled = { !isParticipantEditable }
+                                disabled = { true }
                                 onChange = { _setName }
                                 onSubmit = { joinConference }
                                 placeHolder = { t('dialog.enterDisplayName') }
                                 value = { displayName } />
-
                             <div className = 'prejoin-preview-dropdown-container'>
                                 <InlineDialog
                                     content = { <div className = 'prejoin-preview-dropdown-btns'>
@@ -369,15 +354,9 @@ class Prejoin extends Component<Props, State> {
                                         type = 'primary'>
                                         { t('prejoin.joinMeeting') }
                                     </ActionButton>
-                                    { (showWebLoginButton && !walletSynced) && <ActionButton
-                                        disabled = { false }
-                                        onClick = { signDeepLink }
-                                        type = 'secondary'>
-                                        { 'Login with Superhero' }
-                                    </ActionButton>}
                                 </InlineDialog>
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 )}
                 { showDialog && (
@@ -445,13 +424,11 @@ function mapStateToProps(state, ownProps): Object {
             : false;
 
     return {
-        isAnonymousUser: isGuest(state),
         walletSynced: isWalletJWTSet(state),
         localParticipant: getLocalParticipant(state),
         showWebLoginButton: ENABLE_SUPERHERO && !state['features/aeternity'].hasWallet,
         buttonIsToggled: isPrejoinSkipped(state),
         joinButtonDisabled,
-        name,
         deviceStatusVisible: isDeviceStatusVisible(state),
         roomName: getRoomName(state),
         showDialog: isJoinByPhoneDialogVisible(state),
