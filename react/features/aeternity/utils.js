@@ -54,12 +54,12 @@ export function isWalletJWTSet(state) {
 /**
  * Returns query string and hash concatnated.
  *
- * @param {string} urlString - Url string.
+ * @param {Object}  url - urlString or urlObj.
  * @returns {string}
  */
-export function getQueryStringAndFragment(urlString) {
+export function getQueryStringAndFragment({ urlString, urlObj }) {
     try {
-        const url = new URL(urlString);
+        const url = urlString ? new URL(urlString) : urlObj;
         const search = url.search;
         const hash = url.hash;
         const path = url.pathname;
