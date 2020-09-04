@@ -3,7 +3,7 @@
 
 import BigNumber from 'bignumber.js';
 import React, { Component } from 'react';
-import TIPPING_INTERFACE from 'superhero-utls/src/contracts/TippingInterface.aes';
+import TIPPING_INTERFACE from 'tipping-contract/contracts/v2/Tipping_v2_Interface.aes';
 
 import { client } from '../../../client';
 import { translate } from '../../base/i18n';
@@ -99,8 +99,8 @@ const aeternity = {
 
         this.contract = await client.getContractInstance(TIPPING_INTERFACE, { contractAddress: CONTRACT_ADDRESS });
     },
-    async tip(url, title, amount): Promise {
-        return this.initTippingContractIfNeeded().then(() => this.contract.methods.tip(url, title, { amount }));
+    async tip({ address, message, amount }): Promise {
+        return this.initTippingContractIfNeeded().then(() => this.contract.methods.tip_direct(address, message, { amount }));
     },
     util: {
         aeToAtoms(ae) {
@@ -133,11 +133,8 @@ class TipButton extends Component<Props, State> {
             success: ''
         };
 
-        this._changeCurrency = this._changeCurrency.bind(this);
         this._onToggleTooltip = this._onToggleTooltip.bind(this);
-        this._tokensToCurrency = this._tokensToCurrency.bind(this);
         this._onSendTip = this._onSendTip.bind(this);
-        this._onSendTipComment = this._onSendTipComment.bind(this);
         this._onChangeValue = this._onChangeValue.bind(this);
         this._onTipDeepLink = this._onTipDeepLink.bind(this);
     }
@@ -153,16 +150,6 @@ class TipButton extends Component<Props, State> {
             : document.removeEventListener('click', this._onToggleTooltip);
     }
 
-    /**
-     * WIP.
-     * Chane currency.
-     *
-     * @param {string} currency - New currency.
-     * @returns {void}
-     */
-    _changeCurrency(currency) {
-        this.setState({ currency });
-    }
 
     /**
      * Toggle tooltip.
@@ -202,33 +189,6 @@ class TipButton extends Component<Props, State> {
         }
 
         result ? this.setState({ value: Number(result) }) : this.setState({ value: this.state.value });
-    }
-
-    /**
-     * WIP.
-     * Get token price for the current currency.
-     *
-     * @returns {nubmer}
-     */
-    async _getPriceRates() {
-        const getPriceRates = () => '';
-
-        return await getPriceRates[this.state.currency];
-    }
-
-    /**
-     * WIP.
-     * Converts tokens to current currency.
-     *
-     * @returns {nubmer}
-     */
-    async _tokensToCurrency({ target: { value: amount } }) {
-        const rate = await this._getPriceRates();
-
-        return (amount * rate).toLocaleString('en-US', {
-            style: 'currency',
-            currency: this.state.currency
-        });
     }
 
     /**
@@ -280,13 +240,17 @@ class TipButton extends Component<Props, State> {
      * @returns {void}
      */
     async _onSendTip() {
-        const { t } = this.props;
-        const amount = aeternity.util.aeToAtoms(this.state.value);
-        const url = `${URLS.SUPER}/user-profile/${this.props.account}`;
+        const { account: address, t } = this.props;
+        const { message, value } = this.state;
+        const amount = aeternity.util.aeToAtoms(value);
 
         try {
             this.setState({ showLoading: true });
-            await aeternity.tip(url, this.state.message, amount);
+            await aeternity.tip({
+                address,
+                message,
+                amount
+            });
             this.setState({ success: t('tipping.success') });
         } catch (e) {
             // todo: translates
