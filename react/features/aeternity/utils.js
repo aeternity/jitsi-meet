@@ -50,3 +50,22 @@ export function isInIframe() {
 export function isWalletJWTSet(state) {
     return state['features/base/jwt'].jwt;
 }
+
+/**
+ * Returns query string and hash concatnated.
+ *
+ * @param {Object}  url - urlString or urlObj.
+ * @returns {string}
+ */
+export function getQueryStringAndFragment({ urlString, urlObj }) {
+    try {
+        const url = urlString ? new URL(urlString) : urlObj;
+        const search = url.search;
+        const hash = url.hash;
+        const path = url.pathname;
+
+        return `${path}${search}${hash}`;
+    } catch (error) {
+        console.log(error);
+    }
+}
