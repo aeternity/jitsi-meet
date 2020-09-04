@@ -287,7 +287,7 @@ class TipButton extends Component<Props, State> {
         const { t } = this.props;
         const amount = aeternity.util.aeToAtoms(this.state.value);
         const url = `${URLS.SUPER}/user-profile/${this.props.account}`;
-        const message = this.state.message;
+        const { message } = this.state;
 
         try {
             this.setState({ showLoading: true });
