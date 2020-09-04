@@ -126,7 +126,7 @@ class TipButton extends Component<Props, State> {
             isOpen: false,
             currency: 'eur',
             value: '',
-            message: `Appreciation from conference : ${APP.conference.roomName} on ${window.location.host}.`,
+            message: '',
             error: '',
             showLoading: false,
             success: ''
@@ -180,7 +180,7 @@ class TipButton extends Component<Props, State> {
 
         this.setState({
             isOpen: !this.state.isOpen,
-            message: '',
+            message: `Appreciation from conference : ${APP.conference.roomName} on ${window.location.host}.`,
             value: ''
         });
     }
