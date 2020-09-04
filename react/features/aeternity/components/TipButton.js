@@ -126,7 +126,7 @@ class TipButton extends Component<Props, State> {
             isOpen: false,
             currency: 'eur',
             value: '',
-            message: '',
+            message: `Appreciation from conference : ${APP.conference.roomName} on ${window.location.host}.`,
             error: '',
             showLoading: false,
             success: ''
@@ -287,11 +287,9 @@ class TipButton extends Component<Props, State> {
         const { t } = this.props;
         const amount = aeternity.util.aeToAtoms(this.state.value);
         const url = `${URLS.SUPER}/user-profile/${this.props.account}`;
+        const message = this.state.message;
 
         try {
-            const DEFAULT_MESSAGE = `Appreciation from conference : ${APP.conference.roomName} on ${window.location.host}.`;
-            const message = this.state.message || DEFAULT_MESSAGE;
-
             this.setState({ showLoading: true });
             await aeternity.tip(url, message, amount);
             this.setState({ success: t('tipping.success') });
@@ -382,7 +380,7 @@ class TipButton extends Component<Props, State> {
                                         value = { value } />
                                     <button
                                         className = 'tip-button'
-                                        disabled = { !value || showLoading || isNotValidValue }
+                                        disabled = { !value || showLoading || isNotValidValue || !message }
                                         onClick = { this._onSendTip }>Tip</button>
                                 </div>
                             </div>
