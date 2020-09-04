@@ -40,6 +40,12 @@ ReducerRegistry.register(
     'features/base/jwt',
     (state = DEFAULT_STATE, action) => {
         switch (action.type) {
+        case REJECT_JWT: {
+            return {
+                ...state,
+                reject: true
+            };
+        }
         case SET_JWT: {
             // eslint-disable-next-line no-unused-vars
             const { type, ...payload } = action;
@@ -49,12 +55,6 @@ ReducerRegistry.register(
             };
 
             return equals(state, nextState) ? state : nextState;
-        }
-        case REJECT_JWT: {
-            return {
-                ...state,
-                reject: true
-            };
         }
         }
 

@@ -36,6 +36,11 @@ declare var interfaceConfig: Object;
 
 type Props = {
 
+   /**
+    * True if JWT was rejected by user.
+    */
+   isJWTRejected: boolean,
+
     /**
      * if webwallet JWT was done
      */
@@ -139,12 +144,7 @@ type Props = {
     /**
      * The JitsiLocalTrack to display.
      */
-    videoTrack: ?Object,
-
-    /*
-    * True if JWT was rejected by user.
-    */
-    isJWTRejected: boolean
+    videoTrack: ?Object
 };
 
 type State = {
@@ -433,6 +433,7 @@ function mapStateToProps(state, ownProps): Object {
             : false;
 
     return {
+        isJWTRejected: state['features/base/jwt'].reject,
         walletSynced: isWalletJWTSet(state),
         localParticipant: getLocalParticipant(state),
         showWebLoginButton: ENABLE_SUPERHERO && !state['features/aeternity'].hasWallet,
@@ -444,8 +445,7 @@ function mapStateToProps(state, ownProps): Object {
         hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
         showCameraPreview: !isVideoMutedByUser(state),
         showConferenceInfo,
-        videoTrack: getLocalJitsiVideoTrack(state),
-        isJWTRejected: state['features/base/jwt'].reject
+        videoTrack: getLocalJitsiVideoTrack(state)
     };
 }
 

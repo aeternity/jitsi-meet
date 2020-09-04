@@ -1,3 +1,5 @@
+export const REJECT_JWT = 'REJECT_JWT';
+
 /**
  * The type of redux action which stores a specific JSON Web Token (JWT) into
  * the redux store.
@@ -8,5 +10,3 @@
  * }
  */
 export const SET_JWT = 'SET_JWT';
-
-export const REJECT_JWT = 'REJECT_JWT';
