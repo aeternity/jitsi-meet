@@ -1,6 +1,6 @@
 // @flow
 
-import { SET_JWT, REJECT_JWT } from './actionTypes';
+import { SET_JWT } from './actionTypes';
 
 /**
  * Stores a specific JSON Web Token (JWT) into the redux store.
@@ -15,19 +15,5 @@ export function setJWT(jwt: ?string) {
     return {
         type: SET_JWT,
         jwt
-    };
-}
-
-
-/**
- * Reject JWT action.
- *
- * @returns {{
- *     type: REJECT_JWT
- * }}
- */
-export function rejectJWT() {
-    return {
-        type: REJECT_JWT
     };
 }

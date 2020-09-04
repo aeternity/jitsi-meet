@@ -2,7 +2,7 @@
 
 import { equals, ReducerRegistry } from '../redux';
 
-import { SET_JWT, REJECT_JWT } from './actionTypes';
+import { SET_JWT } from './actionTypes';
 
 /**
  * The default/initial redux state of the feature jwt.
@@ -19,12 +19,7 @@ const DEFAULT_STATE = {
      *
      * @type {boolean}
      */
-    isGuest: true,
-
-    /*
-    * Is JWT was rejected
-    */
-    reject: false
+    isGuest: true
 };
 
 /**
@@ -49,12 +44,6 @@ ReducerRegistry.register(
             };
 
             return equals(state, nextState) ? state : nextState;
-        }
-        case REJECT_JWT: {
-            return {
-                ...state,
-                reject: true
-            };
         }
         }
 
