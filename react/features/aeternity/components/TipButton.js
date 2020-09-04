@@ -362,21 +362,25 @@ class TipButton extends Component<Props, State> {
                                     <div />
                                 </div>
                             </div>}
-                            <div className = 'tip-wrapper'>
+                            <div className = 'tip-popup'>
                                 <input
+                                    className = 'tip-message'
                                     onChange = { this._onChangeMessage }
-                                    placeholder = 'Yor message'
-                                    value = { message } />
-                                <input
-                                    className = 'tip-input'
-                                    onChange = { this._onChangeValue }
-                                    placeholder = 'Amount'
+                                    placeholder = 'What do you appreciate?'
                                     type = 'text'
-                                    value = { value } />
-                                <button
-                                    className = 'tip-button'
-                                    disabled = { !value || showLoading || isNotValidValue }
-                                    onClick = { this._onSendTip }>Tip</button>
+                                    value = { message } />
+                                <div className = 'tip-wrapper'>
+                                    <input
+                                        className = 'tip-input'
+                                        onChange = { this._onChangeValue }
+                                        placeholder = 'Amount'
+                                        type = 'text'
+                                        value = { value } />
+                                    <button
+                                        className = 'tip-button'
+                                        disabled = { !value || showLoading || isNotValidValue }
+                                        onClick = { this._onSendTip }>Tip</button>
+                                </div>
                             </div>
                         </div>
                     )}
