@@ -28,9 +28,16 @@
     .tip-wrapper {
         display: flex;
         align-items: center;
+        margin-top: 7px;
     }
 
-    .tip-input {
+    .tip-popup {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tip-input,
+    .tip-message {
         background: $welcomePageBackground;
         border: none;
         color: $unsupportedBrowserTitleColor;
@@ -48,6 +55,10 @@
         &::placeholder {
             color: $chatPlaceholderColor;
         }
+    }
+
+    .tip-message {
+       padding: 8px;
     }
 
     .tip-button {
@@ -84,7 +95,11 @@
 }
 
 .tip-container {
-    &.tip-container__chat,
+    &.tip-container__chat {
+        position: absolute;
+        left: 25%;
+    }
+
     &.tip-container__tile-view {
         left: 20%;
     }

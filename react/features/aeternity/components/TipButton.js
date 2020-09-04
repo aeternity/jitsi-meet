@@ -121,13 +121,12 @@ class TipButton extends Component<Props, State> {
      */
     constructor(props) {
         super(props);
-        const room = APP.conference.roomName;
 
         this.state = {
             isOpen: false,
             currency: 'eur',
             value: '',
-            message: `Appreciation from conference : ${room} on ${window.location.host}.`,
+            message: '',
             error: '',
             showLoading: false,
             success: ''
@@ -140,6 +139,7 @@ class TipButton extends Component<Props, State> {
         this._onSendTipComment = this._onSendTipComment.bind(this);
         this._onChangeValue = this._onChangeValue.bind(this);
         this._onTipDeepLink = this._onTipDeepLink.bind(this);
+        this._onChangeMessage = this._onChangeMessage.bind(this);
     }
 
     /**
@@ -178,7 +178,11 @@ class TipButton extends Component<Props, State> {
             return;
         }
 
-        this.setState({ isOpen: !this.state.isOpen });
+        this.setState({
+            isOpen: !this.state.isOpen,
+            message: `Appreciation from conference : ${APP.conference.roomName} on ${window.location.host}.`,
+            value: ''
+        });
     }
 
     /**
@@ -283,10 +287,11 @@ class TipButton extends Component<Props, State> {
         const { t } = this.props;
         const amount = aeternity.util.aeToAtoms(this.state.value);
         const url = `${URLS.SUPER}/user-profile/${this.props.account}`;
+        const { message } = this.state;
 
         try {
             this.setState({ showLoading: true });
-            await aeternity.tip(url, this.state.message, amount);
+            await aeternity.tip(url, message, amount);
             this.setState({ success: t('tipping.success') });
         } catch (e) {
             // todo: translates
@@ -320,15 +325,27 @@ class TipButton extends Component<Props, State> {
     }
 
     /**
+     * On change message.
+     *
+     * @param {Object} event - OnChange event.
+     *
+     * @returns {void}
+     */
+    _onChangeMessage({ target: { value: message } }) {
+        this.setState({ message });
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
      * @returns {ReactElement}
      */
     render() {
-        const { isOpen, error, showLoading, value, success } = this.state;
+        const { isOpen, error, showLoading, value, success, message } = this.state;
         const { hasWallet, layout } = this.props;
         const isNotValidValue = String(value).endsWith('.');
+        const isTipButtonDisabled = !value || showLoading || isNotValidValue || !message;
 
         return (
             <div className = 'tip-component'>
@@ -348,17 +365,25 @@ class TipButton extends Component<Props, State> {
                                     <div />
                                 </div>
                             </div>}
-                            <div className = 'tip-wrapper'>
+                            <div className = 'tip-popup'>
                                 <input
-                                    className = 'tip-input'
-                                    onChange = { this._onChangeValue }
-                                    placeholder = 'Amount'
+                                    className = 'tip-message'
+                                    onChange = { this._onChangeMessage }
+                                    placeholder = 'What do you appreciate?'
                                     type = 'text'
-                                    value = { value } />
-                                <button
-                                    className = 'tip-button'
-                                    disabled = { !value || showLoading || isNotValidValue }
-                                    onClick = { this._onSendTip }>Tip</button>
+                                    value = { message } />
+                                <div className = 'tip-wrapper'>
+                                    <input
+                                        className = 'tip-input'
+                                        onChange = { this._onChangeValue }
+                                        placeholder = 'Amount'
+                                        type = 'text'
+                                        value = { value } />
+                                    <button
+                                        className = 'tip-button'
+                                        disabled = { isTipButtonDisabled }
+                                        onClick = { this._onSendTip }>Tip</button>
+                                </div>
                             </div>
                         </div>
                     )}
