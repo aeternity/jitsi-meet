@@ -345,6 +345,7 @@ class TipButton extends Component<Props, State> {
         const { isOpen, error, showLoading, value, success, message } = this.state;
         const { hasWallet, layout } = this.props;
         const isNotValidValue = String(value).endsWith('.');
+        const isTipButtonDisabled = !value || showLoading || isNotValidValue || !message;
 
         return (
             <div className = 'tip-component'>
@@ -380,7 +381,7 @@ class TipButton extends Component<Props, State> {
                                         value = { value } />
                                     <button
                                         className = 'tip-button'
-                                        disabled = { !value || showLoading || isNotValidValue || !message }
+                                        disabled = { isTipButtonDisabled }
                                         onClick = { this._onSendTip }>Tip</button>
                                 </div>
                             </div>
