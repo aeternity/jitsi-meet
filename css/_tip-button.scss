@@ -95,7 +95,11 @@
 }
 
 .tip-container {
-    &.tip-container__chat,
+    &.tip-container__chat {
+        position: absolute;
+        left: 25%;
+    }
+
     &.tip-container__tile-view {
         left: 20%;
     }
