@@ -62,8 +62,9 @@ export function getQueryStringAndFragment(urlString) {
         const url = new URL(urlString);
         const search = url.search;
         const hash = url.hash;
+        const path = url.pathname;
 
-        return `${search}${hash}`;
+        return `${path}${search}${hash}`;
     } catch (error) {
         console.log(error);
     }
