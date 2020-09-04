@@ -7,7 +7,7 @@ import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
 import { InviteMore, Subject } from '.';
 import { client, initClient, scanForWallets } from '../../../../client';
 import { walletFound } from '../../../aeternity';
-import { setJWT } from '../../../base/jwt/actions';
+import { setJWT, rejectJWT } from '../../../base/jwt';
 import { createDeepLinkUrl } from '../../../base/util/createDeepLinkUrl';
 import { parseURLParams } from '../../../base/util/parseURLParams';
 import { getConferenceNameForTitle } from '../../../base/conference';
@@ -272,25 +272,29 @@ class Conference extends AbstractConference<Props, *> {
      *
      */
     async _sign(signatureParam, addressParam, messageParam) {
-        const message = messageParam || `I would like to generate JWT token at ${new Date().toUTCString()}`;
-        const signature = signatureParam || await client.signMessage(message);
-        const address = addressParam || client.rpcClient.getCurrentAccount();
+        try {
+            const message = messageParam || `I would like to generate JWT token at ${new Date().toUTCString()}`;
+            const signature = signatureParam || await client.signMessage(message);
+            const address = addressParam || client.rpcClient.getCurrentAccount();
 
-        const token = await (await fetch('https://jwt.z52da5wt.xyz/claim', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                address,
-                message,
-                signature
-            })
-        })).text();
+            const token = await (await fetch('https://jwt.z52da5wt.xyz/claim', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address,
+                    message,
+                    signature
+                })
+            })).text();
 
-        // if user will click the "reject" button the code will stops before that line
-        this.props.dispatch(setJWT(token));
-        this.setState({ showDeeplink: false });
+            // if user will click the "reject" button the code will stops before that line
+            this.props.dispatch(setJWT(token));
+            this.setState({ showDeeplink: false });
+        } catch {
+            this.props.dispatch(rejectJWT());
+        }
     }
 
     /**
