@@ -8,3 +8,5 @@
  * }
  */
 export const SET_JWT = 'SET_JWT';
+
+export const REJECT_JWT = 'REJECT_JWT';
