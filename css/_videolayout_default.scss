@@ -361,6 +361,10 @@
     &.right {
         float: right;
         margin: 0px 0px 0px 5px;
+
+        @media screen and (max-width: 400px) {
+            margin: 0px 0px 0px 2px;
+        }
     }
 
     .toolbar-icon {
@@ -377,6 +381,15 @@
     .tip-icon  {
         width: 20px;
         height: 20px;
+    }
+
+    @media screen and (max-width: 400px) {
+        margin: 3px 0 0 0;
+
+        .tip-icon {
+            width: 15px;
+            height: 15px;
+        }
     }
 }
 
