@@ -7,7 +7,7 @@ var config = {
     hosts: {
 
         // parent document jitsi path
-        // parent: 'https://superhero.com/meet',
+        parent: '<!--# echo var="domain" default="" -->/league',
 
         // XMPP domain.
         domain: '<!--# echo var="domain" default="" -->',
@@ -190,7 +190,7 @@ var config = {
     // Recording
 
     // Whether to enable file recording or not.
-    fileRecordingsEnabled: false,
+    fileRecordingsEnabled: true,
 
     // Enable the dropbox integration.
     // dropbox: {
@@ -212,7 +212,7 @@ var config = {
     // fileRecordingsServiceSharingEnabled: false,
 
     // Whether to enable live streaming or not.
-    liveStreamingEnabled: false,
+    liveStreamingEnabled: true,
 
     // Transcription (in interface_config,
     // subtitles and buttons can be configured)
