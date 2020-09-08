@@ -361,10 +361,30 @@
     &.right {
         float: right;
         margin: 0px 0px 0px 5px;
+
+        @media screen and (max-width: 400px) {
+            margin: 0px 0px 0px 1px;
+        }
     }
 
     .toolbar-icon {
         margin: 0;
+    }
+}
+
+.connection-indicator,
+#dominantspeakerindicator {
+    @media screen and (max-width: 400px) {
+        width: 15px !important;
+        height: 15px !important;
+        margin-left: 2px !important;
+        margin-top: 2px !important;
+    }
+}
+
+.remote-video-menu-trigger {
+    @media screen and (max-width: 400px) {
+        margin-top: 3px !important;
     }
 }
 
@@ -377,6 +397,24 @@
     .tip-icon  {
         width: 20px;
         height: 20px;
+    }
+
+    @media screen and (max-width: 420px) {
+        margin: 3px 0 0 2px;
+
+        .tip-icon {
+            width: 15px;
+            height: 15px;
+        }
+    }
+
+    @media screen and (max-width: 340px) {
+        margin: 5px 0 0 1px;
+
+        .tip-icon {
+            width: 13px;
+            height: 13px;
+        }
     }
 }
 
