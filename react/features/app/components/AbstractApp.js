@@ -1,7 +1,9 @@
 // @flow
+/* global config */
 
 import React, { Fragment } from 'react';
 
+import { isInIframe, getQueryStringAndFragment } from '../../aeternity/utils';
 import { BaseApp } from '../../base/app';
 import { toURLString } from '../../base/util';
 import { OverlayContainer } from '../../overlay';
@@ -39,6 +41,14 @@ export class AbstractApp extends BaseApp<Props, *> {
      * @inheritdoc
      */
     componentDidMount() {
+        if (!isInIframe() && config.hosts.parent && window.location.href.indexOf(config.hosts.parent) !== -1 ) {
+            const parent = config.hosts.parent;
+            const queryStringAndFragment = getQueryStringAndFragment({ urlObj: window.location });
+
+            window.location = queryStringAndFragment ? `${parent}${queryStringAndFragment}` : parent;
+
+            return;
+        }
         super.componentDidMount();
 
         this._init.then(() => {

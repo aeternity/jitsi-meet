@@ -12,6 +12,7 @@ import AbstractChatMessage, {
     type Props
 } from '../AbstractChatMessage';
 import PrivateMessageButton from '../PrivateMessageButton';
+import { client } from '../../../../client';
 
 /**
  * Renders a single chat message.
@@ -82,7 +83,7 @@ class ChatMessage extends AbstractChatMessage<Props> {
     _renderDisplayName() {
         const { hasWallet, message: { akAddress, displayName } } = this.props;
         const senderHasSuperHeroAddress = Boolean(akAddress);
-        const localParticipantHasSuperHeroWallet = Boolean(hasWallet);
+        const localParticipantHasSuperHeroWallet = Boolean(hasWallet) && Boolean(client);
 
         return (
             <div className = 'display-name'>
