@@ -41,13 +41,11 @@ export class AbstractApp extends BaseApp<Props, *> {
      * @inheritdoc
      */
     componentDidMount() {
-        if (!isInIframe() && config.hosts.parent) {
-            const baseUrl = window.location;
+        if (!isInIframe() && config.hosts.parent && window.location.href.indexOf(config.hosts.parent) !== -1 ) {
             const parent = config.hosts.parent;
-            const queryStringAndFragment = getQueryStringAndFragment({ urlObj: baseUrl });
-            const redirectTo = queryStringAndFragment ? `${parent}${queryStringAndFragment}` : parent;
+            const queryStringAndFragment = getQueryStringAndFragment({ urlObj: window.location });
 
-            window.location = redirectTo;
+            window.location = queryStringAndFragment ? `${parent}${queryStringAndFragment}` : parent;
 
             return;
         }

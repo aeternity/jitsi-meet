@@ -88,7 +88,8 @@
     }
 }
 
-#filmstripRemoteVideosContainer span:first-child {
+#filmstripRemoteVideosContainer span:first-child,
+#filmstripRemoteVideosContainer span:nth-child(2) {
     .tip-container__vertical-filmstrip-view {
         bottom: 15%;
     }
@@ -101,15 +102,12 @@
     }
 
     &.tip-container__tile-view {
+        bottom: 11%;
         left: 20%;
     }
 
-    &.tip-container__tile-view {
-        bottom: 10%;
-    }
-
     &.tip-container__vertical-filmstrip-view {
-        right: 10%;
+        right: 23%;
     }
 }
 

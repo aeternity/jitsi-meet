@@ -184,14 +184,12 @@ class Filmstrip extends Component <Props> {
         const filmstripStyle = { };
         const filmstripRemoteVideosContainerStyle = {};
         let remoteVideoContainerClassName = 'remote-videos-container';
-        const pinnedParticipant = document.getElementById('filmstripRemoteVideosContainer');
+        const { _pinnedParticipant } = this.props;
 
         switch (this.props._currentLayout) {
         case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
             // Adding 18px for the 2px margins, 2px borders on the left and right and 5px padding on the left and right.
             // Also adding 7px for the scrollbar.
-            pinnedParticipant && pinnedParticipant.firstElementChild.classList.remove('pinned');
-
             filmstripStyle.maxWidth = (interfaceConfig.FILM_STRIP_MAX_HEIGHT || 120) + 25;
             break;
         case LAYOUTS.TILE_VIEW: {
@@ -233,8 +231,23 @@ class Filmstrip extends Component <Props> {
         }
 
         filmstripStyle.background = this.props._visible ? 'rgba(33,34,44, 0.66)' : 'none';
-        (pinnedParticipant && this.props._pinnedParticipant)
-        && pinnedParticipant.firstElementChild.classList.add('pinned');
+
+        const localTileView = document.getElementById('localVideoTileViewContainer');
+
+        if (_pinnedParticipant && _pinnedParticipant.local) {
+            const localContainer = document.getElementById('localVideoContainer');
+
+            document.querySelector('.pinned')?.classList.remove('pinned');
+            localContainer.classList.add('pinned');
+            localTileView.classList.add('pinned');
+        } else if (_pinnedParticipant) {
+            const participantId = _pinnedParticipant.id;
+            const remoteContainer = document.getElementById(`participant_${participantId}`);
+
+            document.querySelector('.pinned')?.classList.remove('pinned');
+            localTileView.classList.remove('pinned');
+            remoteContainer.classList.add('pinned');
+        }
 
         return (
             <div

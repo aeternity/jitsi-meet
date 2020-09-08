@@ -309,7 +309,8 @@ class Prejoin extends Component<Props, State> {
                 videoTrack = { videoTrack }>
                 {showJoinActions && (
                     <div className = 'prejoin-input-area-container'>
-                        {isJWTRejected ? <div>Login canceled. Please refresh the page to try again</div>
+                        {isJWTRejected
+                            ? <div className = 'timeout'>Login canceled. Please refresh the page to try again</div>
                             : !walletSynced
                             && <div className = 'prejoin-loader'>
                                 <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
