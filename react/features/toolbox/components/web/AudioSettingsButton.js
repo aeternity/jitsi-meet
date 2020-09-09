@@ -118,12 +118,12 @@ class AudioSettingsButton extends Component<Props, State> {
      * @inheritdoc
      */
     render() {
-        const { isDisabled, onAudioOptionsClick, visible } = this.props;
+        const { isDisabled, onAudioOptionsClick } = this.props;
         const settingsDisabled = !this.state.hasPermissions
             || isDisabled
             || !JitsiMeetJS.mediaDevices.isMultipleAudioInputSupported();
 
-        return visible ? (
+        return (
             <AudioSettingsPopup>
                 <ToolboxButtonWithIcon
                     icon = { IconArrowDown }
@@ -132,7 +132,7 @@ class AudioSettingsButton extends Component<Props, State> {
                     <AudioMuteButton />
                 </ToolboxButtonWithIcon>
             </AudioSettingsPopup>
-        ) : <AudioMuteButton />;
+        );
     }
 }
 

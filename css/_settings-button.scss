@@ -51,6 +51,10 @@
         right: 4px;
         width: 16px;
 
+        @media screen and (max-width: 400px) {
+            display: none;
+        }
+
         &> svg {
             fill: #5e6d7a;
             margin-top: 5px;
