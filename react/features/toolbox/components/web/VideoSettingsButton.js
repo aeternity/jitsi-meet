@@ -137,9 +137,9 @@ class VideoSettingsButton extends Component<Props, State> {
      * @inheritdoc
      */
     render() {
-        const { onVideoOptionsClick } = this.props;
+        const { onVideoOptionsClick, visible } = this.props;
 
-        return (
+        return visible ? (
             <VideoSettingsPopup>
                 <ToolboxButtonWithIcon
                     icon = { IconArrowDown }
@@ -148,7 +148,7 @@ class VideoSettingsButton extends Component<Props, State> {
                     <VideoMuteButton />
                 </ToolboxButtonWithIcon>
             </VideoSettingsPopup>
-        );
+        ) : <VideoMuteButton />;
     }
 }
 
