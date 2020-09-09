@@ -177,6 +177,41 @@
         margin: 32px 0;
         width: 100%;
 
+        .toolbox-icon {
+            align-items: center;
+            cursor: pointer;
+            display: flex;
+            background-color: #fff;
+            border-radius: 50%;
+            border: 2px solid $toolBoxIconBorderColor;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+
+            &.toggled {
+                background: $preJoinButtonToggled;
+                border: $preJoinButtonToggledBorder;
+
+                svg {
+                    fill: #fff;
+                }
+            }
+
+            &.disabled, .disabled & {
+                cursor: initial;
+                color: #fff;
+                background-color: #a4b8d1;
+
+                &:hover {
+                    background-color: #a4b8d1;
+                }
+            }
+
+            svg {
+                fill: $participantsCountBackground;
+            }
+        }
+
         .audio-preview-content {
             left: -114px;
         }
