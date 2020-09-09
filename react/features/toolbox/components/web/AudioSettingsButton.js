@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 
-import { isMobileBrowser } from '../../../base/environment/utils';
 import { IconArrowDown } from '../../../base/icons';
 import JitsiMeetJS from '../../../base/lib-jitsi-meet/_';
 import { connect } from '../../../base/redux';
@@ -32,7 +31,6 @@ type Props = {
 
     /**
      * Flag controlling the visibility of the button.
-     * AudioSettings popup is disabled on mobile browsers.
      */
     visible: boolean,
 };
@@ -145,8 +143,7 @@ class AudioSettingsButton extends Component<Props, State> {
 function mapStateToProps(state) {
     return {
         isDisabled: isAudioSettingsButtonDisabled(state),
-        permissionPromptVisibility: getMediaPermissionPromptVisibility(state),
-        visible: !isMobileBrowser()
+        permissionPromptVisibility: getMediaPermissionPromptVisibility(state)
     };
 }
 
