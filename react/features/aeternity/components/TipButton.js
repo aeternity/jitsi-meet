@@ -181,6 +181,7 @@ class TipButton extends Component<Props, State> {
         this.setState({
             isOpen: !this.state.isOpen,
             message: '',
+            error: '',
             value: ''
         });
     }
