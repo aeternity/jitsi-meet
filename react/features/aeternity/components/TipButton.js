@@ -366,7 +366,7 @@ class TipButton extends Component<Props, State> {
                                     <div />
                                 </div>
                             </div>}
-                            <div className = 'tip-popup'>
+                            {success && <div className = 'tip-popup'>
                                 <input
                                     className = 'tip-message'
                                     onChange = { this._onChangeMessage }
@@ -385,7 +385,7 @@ class TipButton extends Component<Props, State> {
                                         disabled = { isTipButtonDisabled }
                                         onClick = { this._onSendTip }>Tip</button>
                                 </div>
-                            </div>
+                            </div>}
                         </div>
                     )}
                 </> : <div className = 'tip-icon' >
