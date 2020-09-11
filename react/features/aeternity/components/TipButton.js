@@ -367,7 +367,7 @@ class TipButton extends Component<Props, State> {
                                     <div />
                                 </div>
                             </div>}
-                            {success && <div className = 'tip-popup'>
+                            {!success && <div className = 'tip-popup'>
                                 <input
                                     className = 'tip-message'
                                     onChange = { this._onChangeMessage }
