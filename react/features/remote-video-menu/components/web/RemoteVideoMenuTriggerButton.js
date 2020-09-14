@@ -14,6 +14,7 @@ import {
     MuteButton,
     MuteEveryoneElseButton,
     KickButton,
+    PrivateMessageMenuButton,
     RemoteControlButton,
     RemoteVideoMenu,
     VolumeSlider
@@ -180,6 +181,8 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
             participantID
         } = this.props;
 
+        const { ENABLE_SUPERHERO } = interfaceConfig;
+
         const buttons = [];
 
         if (_isModerator) {
@@ -224,6 +227,14 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
                     onClick = { onRemoteControlToggle }
                     participantID = { participantID }
                     remoteControlState = { remoteControlState } />
+            );
+        }
+
+        if (!ENABLE_SUPERHERO) {
+            buttons.push(
+                <PrivateMessageMenuButton
+                    key = 'privateMessage'
+                    participantID = { participantID } />
             );
         }
 
