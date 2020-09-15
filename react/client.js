@@ -15,10 +15,10 @@ const COMPILER_URL = 'https://latest.compiler.aepps.com';
  * @returns {void}
  *
  */
-export async function initClient() {
+export async function initClient(name) {
     try {
         client = await rpcAepp({
-            name: 'Superhero-league',
+            name: name || 'Superhero',
             nodes: [ {
                 name: 'ae_mainnet',
                 instance: await node({
