@@ -151,7 +151,7 @@ class Conference extends AbstractConference<Props, *> {
         }
 
         if (!addressParam && !signatureParam) {
-            initClient().then(() => {
+            initClient(interfaceConfig.APP_NAME).then(() => {
                 scanForWallets(() => {
                     this._sign();
                     this.props.dispatch(walletFound());
@@ -171,7 +171,11 @@ class Conference extends AbstractConference<Props, *> {
             jitsiLocalStorage.setItem('address', addressParam);
             jitsiLocalStorage.setItem('message', message);
             window.location = signLink;
-        } else if (signatureParam) {
+
+            return;
+        }
+
+        if (signatureParam) {
             const addressStorage = jitsiLocalStorage.getItem('address');
             const messageStorage = jitsiLocalStorage.getItem('message');
 
