@@ -58,10 +58,10 @@ export async function scanForWallets(cb) {
         const foundWallet = newWallet || Object.values(wallets)[0];
 
         if (foundWallet) {
-            detector.stopScan();
             await client.connectToWallet(await foundWallet.getConnection());
             await client.subscribeAddress('subscribe', 'current');
             cb();
+            detector.stopScan();
         }
     });
 }

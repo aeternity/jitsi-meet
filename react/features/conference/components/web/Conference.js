@@ -151,6 +151,7 @@ class Conference extends AbstractConference<Props, *> {
         }
 
         if (!addressParam && !signatureParam) {
+            console.log('321321');
             initClient(interfaceConfig.APP_NAME).then(() => {
                 scanForWallets(() => {
                     this._sign();
