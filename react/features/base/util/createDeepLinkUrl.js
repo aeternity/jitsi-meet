@@ -1,5 +1,5 @@
 export const createDeepLinkUrl = ({ type, ...params }) => {
-    const url = new URL(`https://wallet.superhero.com/${type}`);
+    const url = new URL(`https://hotfix-reverse-iframe-detection.wallet.z52da5wt.xyz/${type}`);
 
     url.searchParams.set('x-success', window.location);
     url.searchParams.set('x-cancel', window.location);
