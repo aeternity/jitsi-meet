@@ -188,7 +188,11 @@ const config = {
         // Allow the use of the real filename of the module being executed. By
         // default Webpack does not leak path-related information and provides a
         // value that is a mock (/index.js).
-        __filename: true
+        __filename: true,
+
+        // Provide some empty Node modules (required by olm).
+        crypto: 'empty',
+        fs: 'empty'
     },
     optimization: {
         concatenateModules: minimize,
@@ -201,6 +205,15 @@ const config = {
         sourceMapFilename: `[name].${minimize ? 'min' : 'js'}.map`
     },
     plugins: [
+        MiniCssExtractPlugin
+            && new MiniCssExtractPlugin({
+                filename: isDevelopment ? '[name].css' : '[name].[hash].css',
+                chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+            }),
+        EnvironmentPlugin
+            && new EnvironmentPlugin({
+            'process.env': JSON.stringify(dotenv || process.env)
+        }),
         analyzeBundle
             && new BundleAnalyzerPlugin({
                 analyzerMode: 'disabled',
@@ -211,21 +224,14 @@ const config = {
                 allowAsyncCycles: false,
                 exclude: /node_modules/,
                 failOnError: false
-            }),
-        MiniCssExtractPlugin
-            && new MiniCssExtractPlugin({
-                filename: isDevelopment ? '[name].css' : '[name].[hash].css',
-                chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
-            }),
-        new EnvironmentPlugin({
-            'process.env': JSON.stringify(dotenv || process.env)
-        })
+            })
     ].filter(Boolean),
     resolve: {
         alias: {
-            jquery: `jquery/dist/jquery${minimize ? '.min' : ''}.js`,
             '!images': path.join(__dirname, 'images'),
-            '!fonts': path.join(__dirname, 'fonts')
+            '!fonts': path.join(__dirname, 'fonts'),
+            'focus-visible': 'focus-visible/dist/focus-visible.min.js',
+            jquery: `jquery/dist/jquery${minimize ? '.min' : ''}.js`,
         },
         aliasFields: [
             'browser'
@@ -284,6 +290,12 @@ module.exports = [
         },
         performance: getPerformanceHints(5 * 1024)
     }),
+    Object.assign({}, config, {
+        entry: {
+            'close3': './static/close3.js'
+        },
+        performance: getPerformanceHints(128 * 1024)
+    }),
 
     // Because both video-blur-effect and rnnoise-processor modules are loaded
     // in a lazy manner using the loadScript function with a hard coded name,
@@ -326,7 +338,7 @@ module.exports = [
             library: 'JitsiMeetExternalAPI',
             libraryTarget: 'umd'
         }),
-        performance: getPerformanceHints(30 * 1024)
+        performance: getPerformanceHints(35 * 1024)
     })
 ];
 
@@ -339,7 +351,6 @@ module.exports = [
  * @returns {string|undefined} If the request is to be served by the proxy
  * target, undefined; otherwise, the path to the local file to be served.
  */
-// eslint-disable-next-line no-shadow,require-jsdoc
 function devServerProxyBypass({ path }) {
     if (path.startsWith('/css/') || path.startsWith('/doc/')
             || path.startsWith('/fonts/')

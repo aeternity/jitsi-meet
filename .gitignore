@@ -1,3 +1,7 @@
+# Because we have two domains with different includes
+.env.json
+source_package/
+
 *.swp
 .*.tmp
 deploy-local.sh
@@ -6,7 +10,6 @@ all.css
 *css.map
 .remote-sync.json
 .sync-config.cson
-source_package/
 
 # CocoaPods
 Pods/
@@ -85,5 +88,9 @@ android/app/google-services.json
 ios/app/dropbox.key
 ios/app/GoogleService-Info.plist
 
-# Because we have two domains with different includes
-.env.json
+.vscode
+
+# TWA
+twa/*.apk
+twa/*.aab
+twa/assetlinks.json
