@@ -310,22 +310,24 @@ class Prejoin extends Component<Props, State> {
         const {
             walletSynced,
             walletRequired,
+            isJWTRejected,
             showWebLoginButton,
             localParticipant,
             hasJoinByPhoneButton,
             joinConference,
             joinConferenceWithoutAudio,
+            name,
             showAvatar,
             showCameraPreview,
             showDialog,
             showConferenceInfo,
             showJoinActions,
             t,
-            videoTrack,
-            isJWTRejected
+            videoTrack
         } = this.props;
-        const displayName = walletSynced ? localParticipant.name : '';
 
+        let requireWallet = !config.iAmRecorder ? walletRequired : false;
+        const displayName = config.iAmRecorder ? '🎬' : walletSynced ? localParticipant.name : !walletRequired ? name : '';
         const { _closeDialog, _onDropdownClose, _onJoinButtonClick, _onOptionsClick, _setName, _showDialog } = this;
         const { showJoinByPhoneButtons, showError } = this.state;
 
@@ -346,7 +348,7 @@ class Prejoin extends Component<Props, State> {
                             : !walletSynced
                             && <div className = 'prejoin-loader'>
                                 <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
-                                <div className = 'timeout'> Please wait while connecting to your wallet </div>
+                                <div className = 'timeout'>Please wait while connecting to your wallet</div>
                             </div>}
                         {(showWebLoginButton && !walletSynced) && <ActionButton
                             disabled = { false }
@@ -357,7 +359,7 @@ class Prejoin extends Component<Props, State> {
                         {(walletSynced || !walletRequired) &&
                         <div className = 'prejoin-input-area'>
                             <InputField
-                                disabled = { walletRequired }
+                                disabled = { walletRequired || walletSynced }
                                 autoFocus = { true }
                                 className = { showError ? 'error' : '' }
                                 hasError = { showError }
@@ -463,7 +465,7 @@ class Prejoin extends Component<Props, State> {
 function mapStateToProps(state, ownProps): Object {
     const { ENABLE_SUPERHERO, REQUIRE_WALLET } = interfaceConfig;
     const name = getDisplayName(state);
-    const showErrorOnJoin = isDisplayNameRequired(state) && !name;
+    const showErrorOnJoin = isDisplayNameRequired(state) && !name && !config.iAmRecorder;
     const { showJoinActions } = ownProps;
     const isInviteButtonEnabled = isButtonEnabled('invite');
 
@@ -476,7 +478,7 @@ function mapStateToProps(state, ownProps): Object {
             : false;
 
     return {
-        walletRequired: REQUIRE_WALLET,
+        walletRequired: ENABLE_SUPERHERO && REQUIRE_WALLET,
         walletSynced: ENABLE_SUPERHERO && isWalletJWTSet(state),
         localParticipant: getLocalParticipant(state),
         showWebLoginButton: ENABLE_SUPERHERO && !state['features/aeternity'].hasWallet,
