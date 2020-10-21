@@ -3,7 +3,7 @@
 
 import BigNumber from 'bignumber.js';
 import React, { Component } from 'react';
-import TIPPING_INTERFACE from 'superhero-utls/src/contracts/TippingInterface.aes';
+import TIPPING_V1_INTERFACE from 'tipping-contract/Tipping_v1_Interface.aes';
 
 import { client } from '../../../client';
 import { translate } from '../../base/i18n';
@@ -97,7 +97,7 @@ const aeternity = {
             return;
         }
 
-        this.contract = await client.getContractInstance(TIPPING_INTERFACE, { contractAddress: CONTRACT_ADDRESS });
+        this.contract = await client.getContractInstance(TIPPING_V1_INTERFACE, { contractAddress: CONTRACT_ADDRESS });
     },
     async tip(url, title, amount): Promise {
         return this.initTippingContractIfNeeded().then(() => this.contract.methods.tip(url, title, { amount }));

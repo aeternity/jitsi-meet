@@ -5,17 +5,13 @@ local basexx = require "basexx";
 local have_async, async = pcall(require, "util.async");
 local hex = require "util.hex";
 local jwt = require "luajwtjitsi";
-local http = require "net.http";
 local jid = require "util.jid";
 local json_safe = require "cjson.safe";
 local path = require "util.paths";
 local sha256 = require "util.hashes".sha256;
-local timer = require "util.timer";
+local http_get_with_retry = module:require "util".http_get_with_retry;
 
-local http_timeout = 30;
-local http_headers = {
-    ["User-Agent"] = "Prosody ("..prosody.version.."; "..prosody.platform..")"
-};
+local nr_retries = 3;
 
 -- TODO: Figure out a less arbitrary default cache size.
 local cacheSize = module:get_option_number("jwt_pubkey_cache_size", 128);
@@ -93,6 +89,8 @@ function Util.new(module)
     --array of accepted audiences: by default only includes our appId
     self.acceptedAudiences = module:get_option_array('asap_accepted_audiences',{'*'})
 
+    self.requireRoomClaim = module:get_option_boolean('asap_require_room_claim', true);
+
     if self.asapKeyServer and not have_async then
         module:log("error", "requires a version of Prosody with util.async");
         return nil;
@@ -102,7 +100,23 @@ function Util.new(module)
 end
 
 function Util:set_asap_key_server(asapKeyServer)
-    self.asapKeyServer = asapKeyServer
+    self.asapKeyServer = asapKeyServer;
+end
+
+function Util:set_asap_accepted_issuers(acceptedIssuers)
+    self.acceptedIssuers = acceptedIssuers;
+end
+
+function Util:set_asap_accepted_audiences(acceptedAudiences)
+    self.acceptedAudiences = acceptedAudiences;
+end
+
+function Util:set_asap_require_room_claim(checkRoom)
+    self.requireRoomClaim = checkRoom;
+end
+
+function Util:clear_asap_cache()
+    self.cache = require"util.cache".new(cacheSize);
 end
 
 --- Returns the public key by keyID
@@ -113,55 +127,18 @@ function Util:get_public_key(keyId)
     if content == nil then
         -- If the key is not found in the cache.
         module:log("debug", "Cache miss for key: "..keyId);
-        local code;
-        local wait, done = async.waiter();
-        local function cb(content_, code_, response_, request_)
-            content, code = content_, code_;
-            if code == 200 or code == 204 then
-                self.cache:set(keyId, content);
-            else
-                module:log("warn", "Error on public key request: Code %s, Content %s",
-                code_, content_);
-            end
-            done();
-        end
         local keyurl = path.join(self.asapKeyServer, hex.to(sha256(keyId))..'.pem');
         module:log("debug", "Fetching public key from: "..keyurl);
-
-        -- We hash the key ID to work around some legacy behavior and make
-        -- deployment easier. It also helps prevent directory
-        -- traversal attacks (although path cleaning could have done this too).
-        local request = http.request(keyurl, {
-            headers = http_headers or {},
-            method = "GET"
-        }, cb);
-
-        -- TODO: Is the done() call racey? Can we cancel this if the request
-        --       succeedes?
-        local function cancel()
-            -- TODO: This check is racey. Not likely to be a problem, but we should
-            --       still stick a mutex on content / code at some point.
-            if code == nil then
-                -- no longer present in prosody 0.11, so check before calling
-                if http.destroy_request ~= nil then
-                    http.destroy_request(request);
-                end
-                done();
-            end
+        content = http_get_with_retry(keyurl, nr_retries);
+        if content ~= nil then
+            self.cache:set(keyId, content);
         end
-        timer.add_task(http_timeout, cancel);
-        wait();
-
-        if code == 200 or code == 204 then
-            return content;
-        end
+        return content;
     else
         -- If the key is in the cache, use it.
         module:log("debug", "Cache hit for key: "..keyId);
         return content;
     end
-
-    return nil;
 end
 
 --- Verifies issuer part of token
@@ -169,6 +146,10 @@ end
 -- @param 'acceptedIssuers' list of issuers to check
 -- @return nil and error string or true for accepted claim
 function Util:verify_issuer(issClaim, acceptedIssuers)
+    if not acceptedIssuers then
+        acceptedIssuers = self.acceptedIssuers
+    end
+    module:log("debug","verify_issuer claim: %s against accepted: %s",issClaim, acceptedIssuers);
     for i, iss in ipairs(acceptedIssuers) do
         if issClaim == iss then
             --claim matches an accepted issuer so return success
@@ -183,6 +164,7 @@ end
 -- @param 'aud' claim from the token to verify
 -- @return nil and error string or true for accepted claim
 function Util:verify_audience(audClaim)
+    module:log("debug","verify_audience claim: %s against accepted: %s",audClaim, self.acceptedAudiences);
     for i, aud in ipairs(self.acceptedAudiences) do
         if aud == '*' then
             --* indicates to accept any audience in the claims so return success
@@ -223,9 +205,11 @@ function Util:verify_token(token, secret, acceptedIssuers)
         return nil, issCheckErr;
     end
 
-    local roomClaim = claims["room"];
-    if roomClaim == nil then
-        return nil, "'room' claim is missing";
+    if self.requireRoomClaim then
+        local roomClaim = claims["room"];
+        if roomClaim == nil then
+            return nil, "'room' claim is missing";
+        end
     end
 
     local audClaim = claims["aud"];
@@ -266,7 +250,10 @@ function Util:process_and_verify_token(session, acceptedIssuers)
     end
 
     local pubKey;
-    if self.asapKeyServer and session.auth_token ~= nil then
+    if session.public_key then
+        module:log("debug","Public key was found on the session");
+        pubKey = session.public_key;
+    elseif self.asapKeyServer and session.auth_token ~= nil then
         local dotFirst = session.auth_token:find("%.");
         if not dotFirst then return nil, "Invalid token" end
         local header, err = json_safe.decode(basexx.from_url64(session.auth_token:sub(1,dotFirst-1)));

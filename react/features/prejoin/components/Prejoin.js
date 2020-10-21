@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { isWalletJWTSet } from '../../aeternity/utils';
 import { getRoomName } from '../../base/conference';
 import { translate } from '../../base/i18n';
-import { Icon, IconPhone, IconVolumeOff } from '../../base/icons';
+import { Icon, IconArrowDown, IconArrowUp, IconPhone, IconVolumeOff } from '../../base/icons';
 import { isVideoMutedByUser } from '../../base/media';
 import { getLocalParticipant } from '../../base/participants';
 import { ActionButton, InputField, PreMeetingScreen, ToggleButton } from '../../base/premeeting';
@@ -42,6 +42,11 @@ type Props = {
     walletSynced: boolean,
 
     /**
+     * if user needs to have wallet to join
+     */
+    walletRequired: boolean,
+
+    /**
      * local participant
      */
     localParticipant: Object,
@@ -70,11 +75,6 @@ type Props = {
      * If join by phone button should be visible.
      */
     hasJoinByPhoneButton: boolean,
-
-    /**
-     * If join button is disabled or not.
-     */
-    joinButtonDisabled: boolean,
 
     /**
      * Joins the current meeting.
@@ -117,6 +117,11 @@ type Props = {
     showCameraPreview: boolean,
 
     /**
+     * If should show an error when joining without a name.
+     */
+    showErrorOnJoin: boolean,
+
+    /**
      * Flag signaling the visibility of join label, input and buttons
      */
     showJoinActions: boolean,
@@ -150,6 +155,11 @@ type Props = {
 type State = {
 
     /**
+     * Flag controlling the visibility of the error label.
+     */
+    showError: boolean,
+
+    /**
      * Flag controlling the visibility of the 'join by phone' buttons.
      */
     showJoinByPhoneButtons: boolean
@@ -179,15 +189,37 @@ class Prejoin extends Component<Props, State> {
         super(props);
 
         this.state = {
+            showError: false,
             showJoinByPhoneButtons: false
         };
 
         this._closeDialog = this._closeDialog.bind(this);
         this._showDialog = this._showDialog.bind(this);
+        this._onJoinButtonClick = this._onJoinButtonClick.bind(this);
         this._onToggleButtonClick = this._onToggleButtonClick.bind(this);
         this._onDropdownClose = this._onDropdownClose.bind(this);
         this._onOptionsClick = this._onOptionsClick.bind(this);
         this._setName = this._setName.bind(this);
+    }
+    _onJoinButtonClick: () => void;
+
+    /**
+     * Handler for the join button.
+     *
+     * @param {Object} e - The synthetic event.
+     * @returns {void}
+     */
+    _onJoinButtonClick() {
+        if (this.props.showErrorOnJoin) {
+            this.setState({
+                showError: true
+            });
+
+            return;
+        }
+
+        this.setState({ showError: false });
+        this.props.joinConference();
     }
 
     _onToggleButtonClick: () => void;
@@ -277,25 +309,27 @@ class Prejoin extends Component<Props, State> {
     render() {
         const {
             walletSynced,
+            walletRequired,
+            isJWTRejected,
             showWebLoginButton,
             localParticipant,
-            joinButtonDisabled,
             hasJoinByPhoneButton,
             joinConference,
             joinConferenceWithoutAudio,
+            name,
             showAvatar,
             showCameraPreview,
             showDialog,
             showConferenceInfo,
             showJoinActions,
             t,
-            videoTrack,
-            isJWTRejected
+            videoTrack
         } = this.props;
-        const displayName = walletSynced ? localParticipant.name : '';
 
-        const { _closeDialog, _onDropdownClose, _onOptionsClick, _setName, _showDialog } = this;
-        const { showJoinByPhoneButtons } = this.state;
+        let requireWallet = !config.iAmRecorder ? walletRequired : false;
+        const displayName = config.iAmRecorder ? '🎬' : walletSynced ? localParticipant.name : !walletRequired ? name : '';
+        const { _closeDialog, _onDropdownClose, _onJoinButtonClick, _onOptionsClick, _setName, _showDialog } = this;
+        const { showJoinByPhoneButtons, showError } = this.state;
 
         return (
             <PreMeetingScreen
@@ -314,7 +348,7 @@ class Prejoin extends Component<Props, State> {
                             : !walletSynced
                             && <div className = 'prejoin-loader'>
                                 <div className = 'lds-ellipsis'><div /><div /><div /><div /></div>
-                                <div className = 'timeout'> Please wait while connecting to your wallet </div>
+                                <div className = 'timeout'>Please wait while connecting to your wallet</div>
                             </div>}
                         {(showWebLoginButton && !walletSynced) && <ActionButton
                             disabled = { false }
@@ -322,18 +356,28 @@ class Prejoin extends Component<Props, State> {
                             type = 'secondary'>
                             { 'Login with Superhero ID' }
                         </ActionButton>}
-                        {walletSynced && <div className = 'prejoin-input-area'>
+                        {(walletSynced || !walletRequired) &&
+                        <div className = 'prejoin-input-area'>
                             <InputField
-                                disabled = { true }
+                                disabled = { walletRequired || walletSynced }
+                                autoFocus = { true }
+                                className = { showError ? 'error' : '' }
+                                hasError = { showError }
                                 onChange = { _setName }
                                 onSubmit = { joinConference }
                                 placeHolder = { t('dialog.enterDisplayName') }
                                 value = { displayName } />
+
+                            {showError && <div
+                                className = 'prejoin-error'
+                                data-testid = 'prejoin.errorMessage'>{t('prejoin.errorMissingName')}</div>}
+
                             <div className = 'prejoin-preview-dropdown-container'>
                                 <InlineDialog
                                     content = { <div className = 'prejoin-preview-dropdown-btns'>
                                         <div
                                             className = 'prejoin-preview-dropdown-btn'
+                                            data-testid = 'prejoin.joinWithoutAudio'
                                             onClick = { joinConferenceWithoutAudio }>
                                             <Icon
                                                 className = 'prejoin-preview-dropdown-icon'
@@ -346,6 +390,7 @@ class Prejoin extends Component<Props, State> {
                                             onClick = { _showDialog }>
                                             <Icon
                                                 className = 'prejoin-preview-dropdown-icon'
+                                                data-testid = 'prejoin.joinByPhone'
                                                 size = { 24 }
                                                 src = { IconPhone } />
                                             { t('prejoin.joinAudioByPhone') }
@@ -354,9 +399,10 @@ class Prejoin extends Component<Props, State> {
                                     isOpen = { showJoinByPhoneButtons }
                                     onClose = { _onDropdownClose }>
                                     <ActionButton
-                                        disabled = { joinButtonDisabled || !displayName }
+                                        disabled = { !displayName }
+                                        OptionsIcon = { showJoinByPhoneButtons ? IconArrowUp : IconArrowDown }
                                         hasOptions = { true }
-                                        onClick = { joinConference }
+                                        onClick = { _onJoinButtonClick }
                                         onOptionsClick = { _onOptionsClick }
                                         testId = 'prejoin.joinMeeting'
                                         type = 'primary'>
@@ -417,9 +463,9 @@ class Prejoin extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state, ownProps): Object {
-    const { ENABLE_SUPERHERO } = interfaceConfig;
+    const { ENABLE_SUPERHERO, REQUIRE_WALLET } = interfaceConfig;
     const name = getDisplayName(state);
-    const joinButtonDisabled = isDisplayNameRequired(state) && !name;
+    const showErrorOnJoin = isDisplayNameRequired(state) && !name && !config.iAmRecorder;
     const { showJoinActions } = ownProps;
     const isInviteButtonEnabled = isButtonEnabled('invite');
 
@@ -432,14 +478,16 @@ function mapStateToProps(state, ownProps): Object {
             : false;
 
     return {
-        walletSynced: isWalletJWTSet(state),
+        walletRequired: ENABLE_SUPERHERO && REQUIRE_WALLET,
+        walletSynced: ENABLE_SUPERHERO && isWalletJWTSet(state),
         localParticipant: getLocalParticipant(state),
         showWebLoginButton: ENABLE_SUPERHERO && !state['features/aeternity'].hasWallet,
         buttonIsToggled: isPrejoinSkipped(state),
-        joinButtonDisabled,
+        name,
         deviceStatusVisible: isDeviceStatusVisible(state),
         roomName: getRoomName(state),
         showDialog: isJoinByPhoneDialogVisible(state),
+        showErrorOnJoin,
         hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
         showCameraPreview: !isVideoMutedByUser(state),
         showConferenceInfo,
