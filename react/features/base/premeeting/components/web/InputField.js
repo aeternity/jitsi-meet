@@ -7,6 +7,11 @@ import { getFieldValue } from '../../../react';
 type Props = {
 
     /**
+     * If the input should be focused on display.
+     */
+    autoFocus?: boolean,
+
+    /**
      * Class name to be appended to the default class list.
      */
     className?: string,
@@ -112,22 +117,19 @@ export default class InputField extends PureComponent<Props, State> {
      * @inheritdoc
      */
     render() {
-        const { disabled, className, testId, placeHolder, type } = this.props;
-        const { value, focused } = this.state;
-        const { _onBlur, _onChange, _onFocus, _onKeyDown } = this;
-
         return (
             <input
-                className = { `field ${focused ? 'focused' : ''} ${className || ''}` }
-                data-testid = { testId ? testId : undefined }
-                disabled = { disabled }
-                onBlur = { _onBlur }
-                onChange = { _onChange }
-                onFocus = { _onFocus }
-                onKeyDown = { _onKeyDown }
-                placeholder = { placeHolder }
-                type = { type }
-                value = { value } />
+                autoFocus = { this.props.autoFocus }
+                className = { `field ${this.state.focused ? 'focused' : ''} ${this.props.className || ''}` }
+                data-testid = { this.props.testId ? this.props.testId : undefined }
+                onBlur = { this._onBlur }
+                onChange = { this._onChange }
+                onFocus = { this._onFocus }
+                onKeyDown = { this._onKeyDown }
+                placeholder = { this.props.placeHolder }
+                type = { this.props.type }
+                disabled = { this.props.disabled }
+                value = { this.state.value } />
         );
     }
 
