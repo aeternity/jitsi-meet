@@ -235,18 +235,13 @@ class Filmstrip extends Component <Props> {
         const localTileView = document.getElementById('localVideoTileViewContainer');
 
         if (_pinnedParticipant && _pinnedParticipant.local) {
-            const localContainer = document.getElementById('localVideoContainer');
-
-            document.querySelector('.pinned')?.classList.remove('pinned');
-            localContainer.classList.add('pinned');
-            localTileView.classList.add('pinned');
-        } else if (_pinnedParticipant) {
-            const participantId = _pinnedParticipant.id;
-            const remoteContainer = document.getElementById(`participant_${participantId}`);
-
-            document.querySelector('.pinned')?.classList.remove('pinned');
-            localTileView.classList.remove('pinned');
-            remoteContainer.classList.add('pinned');
+            document.querySelector('.pinned')?.classList?.remove('pinned');
+            document.getElementById('localVideoContainer')?.classList?.add('pinned');
+            localTileView?.classList?.add('pinned');
+        } else if (_pinnedParticipant && _pinnedParticipant.id) {
+            document.querySelector('.pinned')?.classList?.remove('pinned');
+            document.getElementById(`participant_${_pinnedParticipant.id}`)?.classList?.add('pinned');
+            localTileView?.classList?.remove('pinned');
         }
 
         return (

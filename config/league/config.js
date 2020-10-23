@@ -7,7 +7,7 @@ var config = {
     hosts: {
 
         // parent document jitsi path
-        parent: 'https://superhero.com/league',
+        parent: 'https://league.superhero.com',
 
         // XMPP domain.
         domain: '<!--# echo var="domain" default="" -->',
@@ -49,14 +49,14 @@ var config = {
     testing: {
         // Disables the End to End Encryption feature. Useful for debugging
         // issues related to insertable streams.
-        // disableE2EE: false,
+        disableE2EE: true,
 
         // P2P test mode disables automatic switching to P2P when there are 2
         // participants in the conference.
         p2pTestMode: true,
 
         octo: {
-            probability: 1
+            probability: 0
         }
 
         // Enables the test specific features consumed by jitsi-meet-torture
@@ -342,10 +342,10 @@ var config = {
     //
 
     // Hides lobby button
-    // hideLobbyButton: false,
+    hideLobbyButton: false,
 
     // Require users to always specify a display name.
-    requireDisplayName: false,
+    requireDisplayName: true,
 
     // Whether to use a welcome page or not. In case it's false a random room
     // will be joined when no room is specified.
@@ -356,10 +356,10 @@ var config = {
     // enableClosePage: false,
 
     // Disable hiding of remote thumbnails when in a 1-on-1 conference call.
-    // disable1On1Mode: false,
+    disable1On1Mode: true,
 
     // Default language for the user interface.
-    // defaultLanguage: 'en',
+    defaultLanguage: 'en',
 
     // If true all users without a token will be considered guests and all users
     // with token will be considered non-guests. Only guests will be allowed to
@@ -488,7 +488,7 @@ var config = {
         // module connects to the provided rtcstatsEndpoint and sends statistics regarding
         // PeerConnection states along with getStats metrics polled at the specified
         // interval.
-        // rtcstatsEnabled: true,
+        rtcstatsEnabled: false,
 
         // In order to enable rtcstats one needs to provide a endpoint url.
         // rtcstatsEndpoint: wss://rtcstats-server-pilot.jitsi.net/,

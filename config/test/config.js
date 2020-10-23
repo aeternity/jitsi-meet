@@ -56,7 +56,7 @@ var config = {
         p2pTestMode: true,
 
         octo: {
-            probability: 1
+            probability: 0
         }
 
         // Enables the test specific features consumed by jitsi-meet-torture
@@ -342,7 +342,7 @@ var config = {
     //
 
     // Hides lobby button
-    // hideLobbyButton: false,
+    hideLobbyButton: false,
 
     // Require users to always specify a display name.
     requireDisplayName: false,
@@ -356,10 +356,10 @@ var config = {
     // enableClosePage: false,
 
     // Disable hiding of remote thumbnails when in a 1-on-1 conference call.
-    // disable1On1Mode: false,
+    disable1On1Mode: false,
 
     // Default language for the user interface.
-    // defaultLanguage: 'en',
+    defaultLanguage: 'en',
 
     // If true all users without a token will be considered guests and all users
     // with token will be considered non-guests. Only guests will be allowed to
@@ -488,7 +488,7 @@ var config = {
         // module connects to the provided rtcstatsEndpoint and sends statistics regarding
         // PeerConnection states along with getStats metrics polled at the specified
         // interval.
-        // rtcstatsEnabled: true,
+        rtcstatsEnabled: false,
 
         // In order to enable rtcstats one needs to provide a endpoint url.
         // rtcstatsEndpoint: wss://rtcstats-server-pilot.jitsi.net/,
