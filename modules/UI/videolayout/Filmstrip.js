@@ -41,12 +41,20 @@ const Filmstrip = {
     resizeThumbnailsForTileView(width, height, forceUpdate = false) {
         const thumbs = this._getThumbs(!forceUpdate);
         const avatarSize = height / 2;
+        const ratio = width / height;
+
+        // Everything is relative to vw ; width is 20%
+        const bigVideoWidthPercent = 30;
+        const bigVideoHeight = bigVideoWidthPercent / ratio;
+        const smallVideoWidthPercent = 15;
+        const smallVideoHeight = smallVideoWidthPercent / ratio;
+        const smallVideoAvatar = smallVideoHeight / 2;
 
         const bigVideoCSS = {
             'padding-top': '',
             height: `${height}px`,
-            'min-height': `${height}px`,
-            'min-width': `${width}px`,
+            'min-height': `${bigVideoHeight}vw`,
+            'min-width': `${bigVideoWidthPercent}vw`,
             width: `${width}px`
         };
 
@@ -57,7 +65,7 @@ const Filmstrip = {
 
         let thumbEls = [ ...thumbs.remoteThumbs ];
 
-        // localThumb is underfined when iAmRecorder is enabled
+        // localThumb is undefined when iAmRecorder is enabled
         if (thumbs.localThumb) {
             thumbEls = thumbEls.concat([ ...thumbs.localThumb ]);
         }
@@ -66,18 +74,11 @@ const Filmstrip = {
             const $thumb = $(videoThumb);
 
             // Smaller video
-            if ($thumb.hasClass('with-camera') || $thumb.hasClass('pinned')) {
+            if ($thumb.hasClass('with-camera') || $thumb.hasClass('pinned') || $thumb.is('#sharedVideoContainer') ) {
                 $thumb.css(bigVideoCSS);
 
                 return;
             }
-
-            const ratio = width / height;
-
-            // Everything is relative to vw ; width is 20%
-            const smallVideoWidthPercent = 20;
-            const smallVideoHeight = smallVideoWidthPercent / ratio;
-            const smallVideoAvatar = smallVideoHeight / 2;
 
             $thumb.css({
                 'padding-top': '',
