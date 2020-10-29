@@ -95,11 +95,11 @@
         video {
             object-fit: contain;
         }
+    }
 
-        #videosDelimiter {
-            order: 10;
-            width: 100%;
-        }
+    #videosDelimiter {
+        order: 10;
+        width: 100%;
     }
 
     .has-overflow#filmstripRemoteVideosContainer {
@@ -120,15 +120,23 @@
         margin-bottom: 100px !important;
     }
 
-    .without-camera {
+    #localVideoContainer {
         order: 11;
     }
 
+    .without-camera {
+        order: 12;
+    }
+
     .with-camera {
-        order: 1;
+        order: 1 !important;
+    }
+
+    #sharedVideoContainer {
+        order: -10;
     }
 
     .pinned {
-        order: -10;
+        order: -1;
     }
 }
