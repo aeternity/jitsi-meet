@@ -140,6 +140,7 @@ class TipButton extends Component<Props, State> {
         this._onChangeValue = this._onChangeValue.bind(this);
         this._onTipDeepLink = this._onTipDeepLink.bind(this);
         this._onChangeMessage = this._onChangeMessage.bind(this);
+        this._onDismiss = this._onDismiss.bind(this);
     }
 
     /**
