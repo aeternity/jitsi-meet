@@ -404,7 +404,8 @@
     }
 
     .chatmessage-wrapper {
-        max-width: 50%;
+        max-width: 90%;
+        min-width: 90%;
 
         .timestamp {
             color: $chatInputTextColor;
