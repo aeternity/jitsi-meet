@@ -403,7 +403,7 @@ class Filmstrip extends Component <Props> {
  */
 function _mapStateToProps(state) {
     const { iAmSipGateway } = state['features/base/config'];
-    const { hovered, visible } = state['features/filmstrip'] && !config.iAmRecorder;
+    const { hovered, visible } = state['features/filmstrip'];
     const isFilmstripOnly = Boolean(interfaceConfig.filmStripOnly);
     const reduceHeight
         = !isFilmstripOnly && state['features/toolbox'].visible && interfaceConfig.TOOLBAR_BUTTONS.length;
@@ -430,7 +430,7 @@ function _mapStateToProps(state) {
         _rows: gridDimensions.rows,
         _videosClassName: videosClassName,
         _pinnedParticipant: pinnedParticipant,
-        _visible: visible
+        _visible: visible && !config.iAmRecorder
     };
 }
 
