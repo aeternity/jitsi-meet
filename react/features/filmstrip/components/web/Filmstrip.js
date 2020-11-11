@@ -21,6 +21,7 @@ import { shouldRemoteVideosBeVisible } from '../../functions';
 import Toolbar from './Toolbar';
 
 declare var APP: Object;
+declare var config: Object;
 declare var interfaceConfig: Object;
 
 /**
@@ -402,11 +403,11 @@ class Filmstrip extends Component <Props> {
  */
 function _mapStateToProps(state) {
     const { iAmSipGateway } = state['features/base/config'];
-    const { hovered, visible } = state['features/filmstrip'];
+    const { hovered, visible } = state['features/filmstrip'] && !config.iAmRecorder;
     const isFilmstripOnly = Boolean(interfaceConfig.filmStripOnly);
     const reduceHeight
         = !isFilmstripOnly && state['features/toolbox'].visible && interfaceConfig.TOOLBAR_BUTTONS.length;
-    const remoteVideosVisible = shouldRemoteVideosBeVisible(state);
+    const remoteVideosVisible = shouldRemoteVideosBeVisible(state) && !config.iAmRecorder;
     const { isOpen: shiftRight } = state['features/chat'];
     const className = `${remoteVideosVisible ? '' : 'hide-videos'} ${
         reduceHeight ? 'reduce-height' : ''

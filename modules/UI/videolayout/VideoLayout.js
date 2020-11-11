@@ -147,7 +147,7 @@ const VideoLayout = {
         // FIXME: replace this call with a generic update call once SmallVideo
         // only contains a ReactElement. Then remove this call once the
         // Filmstrip is fully in React.
-        localVideoThumbnail.updateIndicators();
+        localVideoThumbnail && localVideoThumbnail.updateIndicators();
     },
 
     /**
