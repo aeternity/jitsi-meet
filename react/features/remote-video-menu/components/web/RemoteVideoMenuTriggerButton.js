@@ -21,7 +21,6 @@ import {
 } from './';
 
 declare var $: Object;
-declare var interfaceConfig: Object;
 
 /**
  * The type of the React {@code Component} props of
@@ -181,8 +180,6 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
             participantID
         } = this.props;
 
-        const { ENABLE_SUPERHERO } = interfaceConfig;
-
         const buttons = [];
 
         if (_isModerator) {
@@ -230,13 +227,11 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
             );
         }
 
-        if (!ENABLE_SUPERHERO) {
-            buttons.push(
-                <PrivateMessageMenuButton
-                    key = 'privateMessage'
-                    participantID = { participantID } />
-            );
-        }
+        buttons.push(
+            <PrivateMessageMenuButton
+                key = 'privateMessage'
+                participantID = { participantID } />
+        );
 
         if (onVolumeChange) {
             buttons.push(
