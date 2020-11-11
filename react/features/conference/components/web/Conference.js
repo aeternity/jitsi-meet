@@ -146,7 +146,7 @@ class Conference extends AbstractConference<Props, *> {
         const { ENABLE_SUPERHERO } = interfaceConfig;
         const { address: addressParam, signature: signatureParam } = parseURLParams(window.location, true, 'search');
 
-        if (!ENABLE_SUPERHERO) {
+        if (!ENABLE_SUPERHERO || config.iAmRecorder) {
             return this._start();
         }
 

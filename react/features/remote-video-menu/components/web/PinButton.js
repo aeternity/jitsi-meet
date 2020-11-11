@@ -82,7 +82,7 @@ class PinButton extends AbstractPinButton {
  */
 function _mapStateToProps(state) {
     return {
-        visible: state['features/video-layout'].tileViewEnabled
+        visible: true // old: state['features/video-layout'].tileViewEnabled
     };
 }
 

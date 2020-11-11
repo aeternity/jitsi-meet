@@ -193,20 +193,16 @@ class TipButton extends Component<Props, State> {
      * @returns {void}
      */
     _onChangeValue({ target: { value } }) {
-        const validationRegExp = /^\d+\.?\d*$/;
+        const validationRegExp = /^\d+(?:\.\d+)?$/;
         const [ result ] = value.match(validationRegExp) ?? [];
 
-        if (result?.endsWith('.')) {
-            this.setState({ value: result });
-
-            return;
-        } else if (!value) {
+        if (!value) {
             this.setState({ value: '' });
 
             return;
         }
 
-        result ? this.setState({ value: Number(result) }) : this.setState({ value: this.state.value });
+        result !== null ? this.setState({ value: Number(result) }) : this.setState({ value: this.state.value });
     }
 
     /**
@@ -335,6 +331,16 @@ class TipButton extends Component<Props, State> {
     _onChangeMessage({ target: { value: message } }) {
         this.setState({ message });
     }
+    /**
+     * On dismiss message.
+     *
+     * @param {Object} event - OnChange event.
+     *
+     * @returns {void}
+     */
+    _onDismiss() {
+        this.setState({ message: null, error: null });
+    }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -355,7 +361,7 @@ class TipButton extends Component<Props, State> {
                         <TipIcon onClick = { this._onToggleTooltip } />
                     </div>
                     {isOpen && (
-                        <div className = { `tip-container tip-container__${layout}` } >
+                        <div className = { `tip-container tip-container__${layout}` } onClick={ this._onDismiss }>
                             {!showLoading && error && <div className = 'tip-error'> {error} </div>}
                             {!showLoading && !error && success && <div className = 'tip-success'> {success} </div>}
                             {showLoading && <div className = 'tip-loader'>
