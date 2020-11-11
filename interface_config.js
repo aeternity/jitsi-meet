@@ -285,6 +285,7 @@ var interfaceConfig = {
     // Enable superhero features
     ENABLE_SUPERHERO: true,
     REQUIRE_WALLET: true,
+    DISABLE_CHANGE_NAME: true,
 
     // Allow all above example options to include a trailing comma and
     // prevent fear when commenting out the last value.

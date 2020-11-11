@@ -93,7 +93,9 @@ class ProfileTab extends AbstractDialogTab<Props> {
             walletName,
             t
         } = this.props;
-        const isNameDisabled = Boolean(walletName);
+
+        const { DISABLE_CHANGE_NAME } = interfaceConfig;
+        const isNameDisabled = Boolean(walletName) && !!DISABLE_CHANGE_NAME;
 
         return (
             <div>

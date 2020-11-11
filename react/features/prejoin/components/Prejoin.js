@@ -310,6 +310,7 @@ class Prejoin extends Component<Props, State> {
         const {
             walletSynced,
             walletRequired,
+            nameDisabled,
             isJWTRejected,
             showWebLoginButton,
             localParticipant,
@@ -356,10 +357,10 @@ class Prejoin extends Component<Props, State> {
                             type = 'secondary'>
                             { 'Login with Superhero ID' }
                         </ActionButton>}
-                        {(walletSynced || !walletRequired) &&
+                        {(walletSynced || !requireWallet) &&
                         <div className = 'prejoin-input-area'>
                             <InputField
-                                disabled = { walletRequired || walletSynced }
+                                disabled = { nameDisabled && (requireWallet || walletSynced) }
                                 autoFocus = { true }
                                 className = { showError ? 'error' : '' }
                                 hasError = { showError }
@@ -463,7 +464,7 @@ class Prejoin extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state, ownProps): Object {
-    const { ENABLE_SUPERHERO, REQUIRE_WALLET } = interfaceConfig;
+    const { ENABLE_SUPERHERO, REQUIRE_WALLET, DISABLE_CHANGE_NAME } = interfaceConfig;
     const name = getDisplayName(state);
     const showErrorOnJoin = isDisplayNameRequired(state) && !name && !config.iAmRecorder;
     const { showJoinActions } = ownProps;
@@ -478,6 +479,7 @@ function mapStateToProps(state, ownProps): Object {
             : false;
 
     return {
+        nameDisabled: !!DISABLE_CHANGE_NAME,
         walletRequired: ENABLE_SUPERHERO && REQUIRE_WALLET,
         walletSynced: ENABLE_SUPERHERO && isWalletJWTSet(state),
         localParticipant: getLocalParticipant(state),
