@@ -21,6 +21,7 @@ import { shouldRemoteVideosBeVisible } from '../../functions';
 import Toolbar from './Toolbar';
 
 declare var APP: Object;
+declare var config: Object;
 declare var interfaceConfig: Object;
 
 /**
@@ -406,7 +407,7 @@ function _mapStateToProps(state) {
     const isFilmstripOnly = Boolean(interfaceConfig.filmStripOnly);
     const reduceHeight
         = !isFilmstripOnly && state['features/toolbox'].visible && interfaceConfig.TOOLBAR_BUTTONS.length;
-    const remoteVideosVisible = shouldRemoteVideosBeVisible(state);
+    const remoteVideosVisible = shouldRemoteVideosBeVisible(state) && !config.iAmRecorder;
     const { isOpen: shiftRight } = state['features/chat'];
     const className = `${remoteVideosVisible ? '' : 'hide-videos'} ${
         reduceHeight ? 'reduce-height' : ''
@@ -429,7 +430,7 @@ function _mapStateToProps(state) {
         _rows: gridDimensions.rows,
         _videosClassName: videosClassName,
         _pinnedParticipant: pinnedParticipant,
-        _visible: visible
+        _visible: visible && !config.iAmRecorder
     };
 }
 

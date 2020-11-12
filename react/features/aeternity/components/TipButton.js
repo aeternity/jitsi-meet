@@ -140,6 +140,7 @@ class TipButton extends Component<Props, State> {
         this._onChangeValue = this._onChangeValue.bind(this);
         this._onTipDeepLink = this._onTipDeepLink.bind(this);
         this._onChangeMessage = this._onChangeMessage.bind(this);
+        this._onDismiss = this._onDismiss.bind(this);
     }
 
     /**
@@ -193,27 +194,28 @@ class TipButton extends Component<Props, State> {
      * @returns {void}
      */
     _onChangeValue({ target: { value } }) {
-        const validationRegExp = /^\d+\.?\d*$/;
-        const [ result ] = value.match(validationRegExp) ?? [];
-
-        if (result?.endsWith('.')) {
-            this.setState({ value: result });
-
-            return;
-        } else if (!value) {
+        if (!value) {
             this.setState({ value: '' });
 
             return;
         }
 
-        result ? this.setState({ value: Number(result) }) : this.setState({ value: this.state.value });
+        const [ result ] = value.match(/^\d+\.?\d*$/) ?? [];
+
+        if (result === undefined) {
+            this.setState({ value: this.state.value || '' });
+
+            return;
+        }
+
+        this.setState({ value: result });
     }
 
     /**
      * WIP.
      * Get token price for the current currency.
      *
-     * @returns {nubmer}
+     * @returns {number}
      */
     async _getPriceRates() {
         const getPriceRates = () => '';
@@ -286,7 +288,13 @@ class TipButton extends Component<Props, State> {
      */
     async _onSendTip() {
         const { t } = this.props;
-        const amount = aeternity.util.aeToAtoms(this.state.value);
+
+        let value = this.state.value;
+        if (value.endsWith('.')) {
+            value = value.substring(0, value.length -1);
+        }
+        const amount = aeternity.util.aeToAtoms(Number(value));
+
         const url = `${URLS.SUPER}/user-profile/${this.props.account}`;
         const { message } = this.state;
 
@@ -335,6 +343,16 @@ class TipButton extends Component<Props, State> {
     _onChangeMessage({ target: { value: message } }) {
         this.setState({ message });
     }
+    /**
+     * On dismiss message.
+     *
+     * @param {Object} event - OnChange event.
+     *
+     * @returns {void}
+     */
+    _onDismiss() {
+        this.setState({ message: '', value: '', success:null, error: null });
+    }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -355,7 +373,7 @@ class TipButton extends Component<Props, State> {
                         <TipIcon onClick = { this._onToggleTooltip } />
                     </div>
                     {isOpen && (
-                        <div className = { `tip-container tip-container__${layout}` } >
+                        <div className = { `tip-container tip-container__${layout}` }>
                             {!showLoading && error && <div className = 'tip-error'> {error} </div>}
                             {!showLoading && !error && success && <div className = 'tip-success'> {success} </div>}
                             {showLoading && <div className = 'tip-loader'>
@@ -372,20 +390,23 @@ class TipButton extends Component<Props, State> {
                                     onChange = { this._onChangeMessage }
                                     placeholder = 'What do you appreciate?'
                                     type = 'text'
-                                    value = { message } />
+                                    value = { message || '' } />
                                 <div className = 'tip-wrapper'>
                                     <input
                                         className = 'tip-input'
                                         onChange = { this._onChangeValue }
                                         placeholder = 'Amount'
                                         type = 'text'
-                                        value = { value } />
+                                        value = { value || '' } />
                                     <button
                                         className = 'tip-button'
                                         disabled = { isTipButtonDisabled }
                                         onClick = { this._onSendTip }>Tip</button>
                                 </div>
                             </div>}
+                            {(success || error) && <button
+                                className = 'tip-button'
+                                onClick = { this._onDismiss }>Ok</button> }
                         </div>
                     )}
                 </> : <div className = 'tip-icon' >

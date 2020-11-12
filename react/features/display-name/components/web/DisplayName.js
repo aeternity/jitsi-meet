@@ -162,7 +162,9 @@ class DisplayName extends Component<Props, State> {
             _akAddress,
             t
         } = this.props;
-        const isNameDisabled = Boolean(_hasWallet && _akAddress);
+
+        const { DISABLE_CHANGE_NAME } = interfaceConfig;
+        const isNameDisabled = _hasWallet && _akAddress && !!DISABLE_CHANGE_NAME;
 
         if (allowEditing && this.state.isEditing) {
             return (
