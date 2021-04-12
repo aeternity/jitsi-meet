@@ -728,7 +728,7 @@
             "join": "Tap to join",
             "roomname": "Enter room name"
         },
-        "appDescription": "Superhero Meet is a reliable Open-Source Video Call solution. WARNING: Your communication is not P2P encrypted. Snpm iuperhero Meet is free for all to use—no need to create an account. Just create a custom link below and you’re all set.",
+        "appDescription": "Superhero Meet is a reliable Open-Source Video Call solution. WARNING: Your communication is not P2P encrypted by default. Superhero meet is a centralised product and not based on the æeternity Blockchain. Superhero Meet is free for all to use—no need to create an account. Just create a custom link below and you’re all set.",
         "audioVideoSwitch": {
             "audio": "Voice",
             "video": "Video"
