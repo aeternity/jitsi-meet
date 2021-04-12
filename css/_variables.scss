@@ -47,7 +47,7 @@ $presence-idle: rgb(172, 172, 172);
  * Subject
  */
 $participantsCountColor: #fff;
-$participantsCountBackground: #21222C;
+$participantsCountBackground: #101010;
 $subjectTextColor: #727278;
 
 
@@ -68,7 +68,7 @@ $overflowMenuBG: initial;
 $overflowMenuItemHoverBG: #313D52;
 $overflowMenuItemHoverColor: #B8C7E0;
 $overflowMenuItemColor: #B8C7E0;
-$toolBarDesktopBackground: #21222C;
+$toolBarDesktopBackground: #101010;
 $toolBoxIconBorderColor: #BABAC0;
 $toolBoxIconsToggled: #67F7B8;
 $toolBoxIconToggled: #2A2B35;
@@ -108,7 +108,7 @@ $modalMockAKInputBackground: #fafbfc;
 $modalMockAKInputBorder: 1px solid #f4f5f7;
 $modalTextColor: #333;
 $modalLabelsColor: #BABAC0 !important;
-$modalInputsBorderColor: #2a9cff !important;
+$modalInputsBorderColor: #1161FE !important;
 
 /**
  * Chat
@@ -125,7 +125,7 @@ $chatInputBackground: #12121B;
 $chatInputTextColor: #727278;
 $smileysAreaBorderColor: #292A34;
 $chatConversationBackground: rgba(33, 34, 44, 0.95);
-$displayNameColor: #2A9CFF;
+$displayNameColor: #1161FE;
 $borderColor: #707070;
 $chatPlaceholderColor: #727278;
 
@@ -207,8 +207,8 @@ $welcomePageWatermarkHeight: 56px;
  */
 $welcomePageDescriptionColor: #babac0;
 $welcomePageFontFamily: inherit;
-$welcomePageBackground: #21222c;
-$welcomePageTitleColor: #2a9cff;
+$welcomePageBackground: #101010;
+$welcomePageTitleColor: #1161FE;
 $welcomeBorderColor: #1c1c24;
 
 $welcomePageHeaderBackground: none;
@@ -247,7 +247,7 @@ $welcomePageEnterRoomInputContainerPadding: 0 8px 5px 0px;
 $welcomePageEnterRoomInputContainerBorderWidth: 0px 0px 2px 0px;
 $welcomePageEnterRoomInputContainerBorderStyle: solid;
 $welcomePageEnterRoomInputContainerBorderImage: linear-gradient(to right, #dee1e6, #fff) 1;
-$welcomePageEnterRoomInputContainerBorderImageFocused: linear-gradient(to right, #2A9CFF, #2A9CFF) 1;
+$welcomePageEnterRoomInputContainerBorderImageFocused: linear-gradient(to right, #1161FE, #1161FE) 1;
 
 $welcomePageEnterRoomTitleDisplay: inherit;
 
