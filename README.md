@@ -56,8 +56,12 @@ Release notes for Jitsi Meet are maintained on [this repository](https://github.
 
 For web development see [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-web), and for mobile see [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-mobile).
 
-## Contributing
+npm i
+make -B
+make dev
 
+## Contributing
+nvm
 If you are looking to contribute to Jitsi Meet, first of all, thank you! Please
 see our [guidelines for contributing](CONTRIBUTING.md).
 
