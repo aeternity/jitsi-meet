@@ -12,10 +12,14 @@ jobs:
         id: get_branch
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF##*/}|tr '[:upper:]' '[:lower:]')"
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: npm install
+      - name: Reconfigure git to use HTTP authentication
+        run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+      - run: npm ci
       - run: make
       - run: make source-package
       - name: Deploy Feature branch to Staging server
