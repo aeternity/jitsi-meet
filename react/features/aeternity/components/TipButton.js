@@ -3,7 +3,7 @@
 
 import BigNumber from 'bignumber.js';
 import React, { Component } from 'react';
-import TIPPING_V1_INTERFACE from 'tipping-contract/Tipping_v1_Interface.aes';
+import TIPPING_V1_INTERFACE from 'tipping-contract/contracts/v1/Tipping_v1_Interface.aes';
 
 import { client } from '../../../client';
 import { translate } from '../../base/i18n';
